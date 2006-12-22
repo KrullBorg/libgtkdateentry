@@ -1,6 +1,7 @@
 AC_PREREQ(2.59)
 AC_INIT([GtkDateEntry], [0.0.2], [azagli@inwind.it])
 AC_CONFIG_SRCDIR([src/gtkdateentry.c])
+AC_CONFIG_HEADER([config.h])
 
 AM_INIT_AUTOMAKE
 
@@ -10,7 +11,12 @@ AC_CANONICAL_SYSTEM
 
 AC_LIBTOOL_WIN32_DLL
 
+AC_PROG_CXX
 AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
 
 # Checks for header files.
@@ -23,25 +29,11 @@ AC_STRUCT_TM
 
 GTK_DOC_CHECK(1.0)
 
-GTK_REQUIRED=2.6.8
-GTKMASKEDENTRY_REQUIRED=0.0.1
+PKG_CHECK_MODULES(GTKDATEENTRY, [gtk+-2.0 >= 2.6.8
+                                 libgtkmaskedentry >= 0.0.1])
 
-dnl Check for pkgconfig first
-AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, yes, no)
-
-dnl Give error and exit if we don't have pkgconfig
-if test "x$HAVE_PKGCONFIG" = "xno"; then
-  AC_MSG_ERROR(you need to have pkgconfig installed !)
-fi
-
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= $GTK_REQUIRED)
-PKG_CHECK_MODULES(GTKMASKEDENTRY, libgtkmaskedentry >= $GTKMASKEDENTRY_REQUIRED)
-
-AC_SUBST(GTK_CFLAGS)
-AC_SUBST(GTK_LIBS)
-
-AC_SUBST(GTKMASKEDENTRY_CFLAGS)
-AC_SUBST(GTKMASKEDENTRY_LIBS)
+AC_SUBST(GTKDATEENTRY_CFLAGS)
+AC_SUBST(GTKDATEENTRY_LIBS)
 
 # Output files
 AC_CONFIG_FILES([

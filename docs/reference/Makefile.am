@@ -67,8 +67,8 @@ expand_content_files=
 # signals and properties.
 # e.g. INCLUDES=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-INCLUDES = -I$(top_srcdir)/src $(GTK_CFLAGS) $(GTKMASKEDENTRY_CFLAGS)
-GTKDOC_LIBS = $(top_srcdir)/src/libgtkdateentry.la $(GTK_LIBS) $(GTKMASKEDENTRY_LIBS)
+INCLUDES = -I$(top_srcdir)/src $(GTKDATEENTRY_CFLAGS)
+GTKDOC_LIBS = $(top_srcdir)/src/libgtkdateentry.la $(GTKDATEENTRY_LIBS)
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make

@@ -1,10 +1,8 @@
-INCLUDES = $(WARN_CFLAGS) \
-           $(DISABLE_DEPRECATED_CFLAGS) \
-           $(GTK_CFLAGS) \
-           $(GTKMASKEDENTRY_CFLAGS)
+AM_CPPFLAGS = $(WARN_CFLAGS) \
+              $(DISABLE_DEPRECATED_CFLAGS) \
+              $(GTKDATEENTRY_CFLAGS)
 
-LIBS = $(GTK_LIBS) \
-       $(GTKMASKEDENTRY_LIBS)
+LIBS = $(GTKDATEENTRY_LIBS)
 
 lib_LTLIBRARIES = libgtkdateentry.la
 
