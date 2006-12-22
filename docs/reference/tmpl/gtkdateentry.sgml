@@ -1,0 +1,174 @@
+<!-- ##### SECTION Title ##### -->
+GtkDateEntry
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTK_TYPE_DATE_ENTRY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GTK_DATE_ENTRY ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTK_DATE_ENTRY_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTK_DATE_ENTRY_GET_CLASS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_new ##### -->
+<para>
+
+</para>
+
+@format: 
+@separator: 
+@calendar_button_is_visible: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_set_separator ##### -->
+<para>
+
+</para>
+
+@date: 
+@separator: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_set_format ##### -->
+<para>
+
+</para>
+
+@date: 
+@format: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_get_text ##### -->
+<para>
+
+</para>
+
+@date: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_get_strf ##### -->
+<para>
+
+</para>
+
+@date: 
+@format: 
+@separator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_get_tm ##### -->
+<para>
+
+</para>
+
+@date: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_get_gdate ##### -->
+<para>
+
+</para>
+
+@date: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_set_date_strf ##### -->
+<para>
+
+</para>
+
+@date: 
+@str: 
+@format: 
+@separator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_set_date_tm ##### -->
+<para>
+
+</para>
+
+@date: 
+@tmdate: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_set_date_gdate ##### -->
+<para>
+
+</para>
+
+@date: 
+@gdate: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_is_valid ##### -->
+<para>
+
+</para>
+
+@date: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_set_editable ##### -->
+<para>
+
+</para>
+
+@date: 
+@is_editable: 
+
+
+<!-- ##### FUNCTION gtk_date_entry_set_calendar_button_visible ##### -->
+<para>
+
+</para>
+
+@date: 
+@is_visible: 
+
+

@@ -1,0 +1,18 @@
+2006-12-20 Andrea Zagli <azagli@inwind.it>
+
+	* gtkdateentry.c: gtk_date_set_date_strf rewrited
+
+2005-12-08 Andrea Zagli <azagli@inwind.it>
+
+        * changed autotool configure files for compiling
+          also on Win32
+        * changed autotool configure files for cross compiling
+
+2005-11-12 Andrea Zagli <azagli@inwind.it>
+
+	* fixed a bug in gtk_date_set_date_strf
+	* changed return value's gtk_date_set_date_strf from void to gboolean
+
+2005-09-25 Andrea Zagli <azagli@inwind.it>
+
+	* added support for gtk-doc

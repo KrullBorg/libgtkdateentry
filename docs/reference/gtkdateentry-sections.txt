@@ -1,0 +1,26 @@
+<SECTION>
+<FILE>gtkdateentry</FILE>
+GTK_TYPE_DATE_ENTRY
+GTK_DATE_ENTRY
+GTK_DATE_ENTRY_CLASS
+GTK_DATE_ENTRY_GET_CLASS
+<TITLE>GtkDateEntry</TITLE>
+gtk_date_entry_new
+gtk_date_entry_set_separator
+gtk_date_entry_set_format
+gtk_date_entry_get_text
+gtk_date_entry_get_strf
+gtk_date_entry_get_tm
+gtk_date_entry_get_gdate
+gtk_date_entry_set_date_strf
+gtk_date_entry_set_date_tm
+gtk_date_entry_set_date_gdate
+gtk_date_entry_is_valid
+gtk_date_entry_set_editable
+gtk_date_entry_set_calendar_button_visible
+<SUBSECTION Standard>
+GTK_IS_DATE
+gtk_date_entry_get_type
+GTK_IS_DATE_CLASS
+</SECTION>
+

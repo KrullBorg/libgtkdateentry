@@ -1,0 +1,3 @@
+#include <gtkdateentry.h>
+
+gtk_date_entry_get_type

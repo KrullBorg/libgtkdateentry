@@ -1,0 +1,14 @@
+68% symbol docs coverage.
+13 symbols documented.
+0 symbols incomplete.
+6 not documented.
+
+
+GTK_DATE_ENTRY
+GTK_DATE_ENTRY_CLASS
+GTK_DATE_ENTRY_GET_CLASS
+GTK_TYPE_DATE_ENTRY
+gtk_date_entry_get_strf
+
+
+gtkdateentry:Short_Description
