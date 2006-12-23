@@ -264,6 +264,11 @@ const gchar
 	gint i;
 	GDate *gdate = (GDate *)gtk_date_entry_get_gdate (date);
 
+	if (gdate == NULL)
+		{
+			return "";
+		}
+
 	if (format == NULL)
 		{
 			fmt = date->format;
