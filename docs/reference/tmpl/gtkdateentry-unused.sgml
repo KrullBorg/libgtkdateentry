@@ -1,0 +1,27 @@
+<!-- ##### MACRO GTK_DATE_ENTRY ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO GTK_DATE_ENTRY_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+<!-- ##### MACRO GTK_DATE_ENTRY_GET_CLASS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO GTK_TYPE_DATE_ENTRY ##### -->
+<para>
+
+</para>
+
+

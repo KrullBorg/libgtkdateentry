@@ -1,3 +1,12 @@
+2007-01-13 Andrea Zagli <azagli@inwind.it>
+
+	* gtkdateentry.h:
+	* gtkdateentry.c:
+	- GtkDateEntry struct is completely private
+	- gtk_date_entry_set_format now returns a gboolean
+	- changing separator or format there's no date's loss
+	* autogen.sh: added
+
 2006-12-23 Andrea Zagli <azagli@inwind.it>
 
 	* gtkdateentry.c: gtk_date_entry_get_strf now return "" if the date

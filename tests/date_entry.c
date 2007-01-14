@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-#include "gtkdateentry.h"
+#include <gtkdateentry.h>
 
 GtkWidget *window,
           *table,
@@ -12,7 +12,9 @@ GtkWidget *window,
 					*txtSetStrf,
 					*txtSetStrfFormat,
 					*txtSetStrfSep,
-					*btnSetStrf;
+					*btnSetStrf,
+					*tbtnEditable,
+					*tbtnSensitive;
 
 static void
 on_btnSeparator_clicked (GtkButton *button,
@@ -26,8 +28,12 @@ static void
 on_btnFormat_clicked (GtkButton *button,
                       gpointer user_data)
 {
-	gtk_date_entry_set_format (GTK_DATE_ENTRY (date),
-	                           (const gchar *)gtk_entry_get_text (GTK_ENTRY (format)));
+	const gchar *str_format = gtk_entry_get_text (GTK_ENTRY (format));
+
+	if (!gtk_date_entry_set_format (GTK_DATE_ENTRY (date), str_format))
+		{
+			g_warning ("Error on gtk_date_entry_set_format (%s).", str_format);
+		}
 }
 
 static void
@@ -37,6 +43,38 @@ on_btnSetStrf_clicked (GtkButton *button,
 	gtk_date_entry_set_date_strf (GTK_DATE_ENTRY (date),
 	                              (const gchar *)gtk_entry_get_text (GTK_ENTRY (txtSetStrf)),
                                 NULL, 0);
+}
+
+static void
+on_tbtnEditable_toggled (GtkToggleButton *togglebutton,
+                         gpointer user_data)
+{
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tbtnEditable)))
+		{
+			gtk_date_entry_set_editable (GTK_DATE_ENTRY (date), FALSE);
+			gtk_button_set_label (GTK_BUTTON (tbtnEditable), "Not Editable");
+		}
+	else
+		{
+			gtk_date_entry_set_editable (GTK_DATE_ENTRY (date), TRUE);
+			gtk_button_set_label (GTK_BUTTON (tbtnEditable), "Editable");
+		}
+}
+
+static void
+on_tbtnSensitive_toggled (GtkToggleButton *togglebutton,
+                          gpointer user_data)
+{
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tbtnSensitive)))
+		{
+			gtk_widget_set_sensitive (date, FALSE);
+			gtk_button_set_label (GTK_BUTTON (tbtnSensitive), "Not Sensitive");
+		}
+	else
+		{
+			gtk_widget_set_sensitive (date, TRUE);
+			gtk_button_set_label (GTK_BUTTON (tbtnSensitive), "Sensitive");
+		}
 }
 
 int
@@ -53,7 +91,7 @@ main (int argc, char **argv)
   g_signal_connect (G_OBJECT (window), "destroy",
 		                G_CALLBACK (gtk_main_quit), NULL);
 
-  table = gtk_table_new (4, 3, FALSE);
+  table = gtk_table_new (5, 3, FALSE);
   gtk_container_add (GTK_CONTAINER (window), table);
   gtk_widget_show (table);
 
@@ -113,6 +151,20 @@ main (int argc, char **argv)
 
 	g_signal_connect (G_OBJECT (btnSetStrf), "clicked",
 	                  G_CALLBACK (on_btnSetStrf_clicked), NULL);
+
+	tbtnEditable = gtk_toggle_button_new_with_label ("Editable");
+  gtk_table_attach (GTK_TABLE (table), tbtnEditable, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+  gtk_widget_show (tbtnEditable);
+
+	g_signal_connect (G_OBJECT (tbtnEditable), "toggled",
+	                  G_CALLBACK (on_tbtnEditable_toggled), NULL);
+
+	tbtnSensitive = gtk_toggle_button_new_with_label ("Sensitive");
+  gtk_table_attach (GTK_TABLE (table), tbtnSensitive, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+  gtk_widget_show (tbtnSensitive);
+
+	g_signal_connect (G_OBJECT (tbtnSensitive), "toggled",
+	                  G_CALLBACK (on_tbtnSensitive_toggled), NULL);
 
 	gtk_widget_show (window);
   

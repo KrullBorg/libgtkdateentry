@@ -2,7 +2,7 @@
 GtkDateEntry
 
 <!-- ##### SECTION Short_Description ##### -->
-
+A Gtk+ widget that simplifies date input.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -17,35 +17,10 @@ GtkDateEntry
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### MACRO GTK_TYPE_DATE_ENTRY ##### -->
+<!-- ##### STRUCT GtkDateEntry ##### -->
 <para>
-
+The #GtkDateEntry struct contains private data only, and should be manipulated using the functions below.
 </para>
-
-
-
-<!-- ##### MACRO GTK_DATE_ENTRY ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO GTK_DATE_ENTRY_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
-<!-- ##### MACRO GTK_DATE_ENTRY_GET_CLASS ##### -->
-<para>
-
-</para>
-
-@obj: 
 
 
 <!-- ##### FUNCTION gtk_date_entry_new ##### -->
@@ -75,6 +50,7 @@ GtkDateEntry
 
 @date: 
 @format: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gtk_date_entry_get_text ##### -->
@@ -95,80 +71,5 @@ GtkDateEntry
 @format: 
 @separator: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_get_tm ##### -->
-<para>
-
-</para>
-
-@date: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_get_gdate ##### -->
-<para>
-
-</para>
-
-@date: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_set_date_strf ##### -->
-<para>
-
-</para>
-
-@date: 
-@str: 
-@format: 
-@separator: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_set_date_tm ##### -->
-<para>
-
-</para>
-
-@date: 
-@tmdate: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_set_date_gdate ##### -->
-<para>
-
-</para>
-
-@date: 
-@gdate: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_is_valid ##### -->
-<para>
-
-</para>
-
-@date: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_set_editable ##### -->
-<para>
-
-</para>
-
-@date: 
-@is_editable: 
-
-
-<!-- ##### FUNCTION gtk_date_entry_set_calendar_button_visible ##### -->
-<para>
-
-</para>
-
-@date: 
-@is_visible: 
 
 
