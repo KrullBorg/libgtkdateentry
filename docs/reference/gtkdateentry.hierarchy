@@ -1,0 +1,19 @@
+GObject
+  GInitiallyUnowned
+    GtkObject
+      GtkWidget
+        GtkContainer
+          GtkBox
+            GtkHBox
+              GtkDateEntry
+  GtkStyle
+  GdkDrawable
+    GdkWindow
+  GdkDragContext
+  GtkTooltip
+  GdkScreen
+GInterface
+  GTypePlugin
+  AtkImplementorIface
+  GtkBuildable
+  GtkOrientable

@@ -1,9 +1,11 @@
-88% symbol docs coverage.
-7 symbols documented.
+81% symbol docs coverage.
+13 symbols documented.
 0 symbols incomplete.
-1 not documented.
+3 not documented.
 
 
+gtk_date_entry_get_gdate
 gtk_date_entry_get_strf
+gtk_date_entry_get_tm
 
 

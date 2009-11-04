@@ -1,0 +1,5 @@
+GtkWidget GtkBuildable AtkImplementorIface
+GtkContainer GtkBuildable AtkImplementorIface
+GtkBox GtkBuildable GtkOrientable AtkImplementorIface
+GtkHBox GtkBuildable GtkOrientable AtkImplementorIface
+GtkDateEntry GtkBuildable GtkOrientable AtkImplementorIface

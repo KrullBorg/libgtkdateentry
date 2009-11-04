@@ -1,0 +1,9 @@
+GtkDateEntryClass
+gtk_date_entry_get_gdate
+gtk_date_entry_get_tm
+gtk_date_entry_is_valid
+gtk_date_entry_set_calendar_button_visible
+gtk_date_entry_set_date_gdate
+gtk_date_entry_set_date_strf
+gtk_date_entry_set_date_tm
+gtk_date_entry_set_editable

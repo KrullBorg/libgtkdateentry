@@ -1,0 +1,114 @@
+<MACRO>
+<NAME>GTK_TYPE_DATE_ENTRY</NAME>
+#define GTK_TYPE_DATE_ENTRY           (gtk_date_entry_get_type ())
+</MACRO>
+<MACRO>
+<NAME>GTK_DATE_ENTRY</NAME>
+#define GTK_DATE_ENTRY(obj)           (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_DATE_ENTRY, GtkDateEntry))
+</MACRO>
+<MACRO>
+<NAME>GTK_DATE_ENTRY_CLASS</NAME>
+#define GTK_DATE_ENTRY_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_DATE_ENTRY, GtkDateEntry))
+</MACRO>
+<MACRO>
+<NAME>GTK_IS_DATE</NAME>
+#define GTK_IS_DATE(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_DATE_ENTRY))
+</MACRO>
+<MACRO>
+<NAME>GTK_IS_DATE_CLASS</NAME>
+#define GTK_IS_DATE_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_DATE_ENTRY))
+</MACRO>
+<MACRO>
+<NAME>GTK_DATE_ENTRY_GET_CLASS</NAME>
+#define GTK_DATE_ENTRY_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_DATE_ENTRY, GtkDateEntry))
+</MACRO>
+<STRUCT>
+<NAME>GtkDateEntry</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GtkDateEntryClass</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GtkDateEntry</NAME>
+struct _GtkDateEntry
+{
+  GtkHBox hbox;
+};
+</STRUCT>
+<STRUCT>
+<NAME>GtkDateEntryClass</NAME>
+struct _GtkDateEntryClass
+{
+  GtkHBoxClass parent_class;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gtk_date_entry_get_type</NAME>
+<RETURNS>GType </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_new</NAME>
+<RETURNS>GtkWidget *</RETURNS>
+const gchar *format,const gchar separator,gboolean calendar_button_is_visible
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_set_separator</NAME>
+<RETURNS>void </RETURNS>
+GtkDateEntry *date,const gchar separator
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_set_format</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkDateEntry *date,const gchar *format
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_get_text</NAME>
+<RETURNS>const gchar *</RETURNS>
+GtkDateEntry *date
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_get_strf</NAME>
+<RETURNS>const gchar *</RETURNS>
+GtkDateEntry *date,const gchar *format,gchar separator
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_get_tm</NAME>
+<RETURNS>struct tm *</RETURNS>
+GtkDateEntry *date
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_get_gdate</NAME>
+<RETURNS>GDate *</RETURNS>
+GtkDateEntry *date
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_set_date_strf</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkDateEntry *date,const gchar *str,const gchar *format,const gchar separator
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_set_date_tm</NAME>
+<RETURNS>void </RETURNS>
+GtkDateEntry *date,const struct tm tmdate
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_set_date_gdate</NAME>
+<RETURNS>void </RETURNS>
+GtkDateEntry *date,const GDate *gdate
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_is_valid</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkDateEntry *date
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_set_editable</NAME>
+<RETURNS>void </RETURNS>
+GtkDateEntry *date,gboolean is_editable
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_date_entry_set_calendar_button_visible</NAME>
+<RETURNS>void </RETURNS>
+GtkDateEntry *date,gboolean is_visible
+</FUNCTION>
