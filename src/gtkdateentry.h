@@ -1,7 +1,7 @@
 /*
  * GtkDateEntry widget for GTK+
  *
- * Copyright (C) 2005-2006 Andrea Zagli <azagli@libero.it>
+ * Copyright (C) 2005-2009 Andrea Zagli <azagli@libero.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -86,6 +86,8 @@ gboolean gtk_date_entry_is_valid (GtkDateEntry *date);
 
 void gtk_date_entry_set_editable (GtkDateEntry *date,
                                   gboolean is_editable);
+void gtk_date_entry_set_editable_with_calendar (GtkDateEntry *date,
+                                  gboolean is_editable_with_calendar);
 
 void gtk_date_entry_set_calendar_button_visible (GtkDateEntry *date,
                                                  gboolean is_visible);

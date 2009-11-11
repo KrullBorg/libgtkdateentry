@@ -1,0 +1,10 @@
+<ARG>
+<NAME>GtkDateEntry::editable-with-calendar</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Tabulation inside the widget</NICK>
+<BLURB>Whether pressing tab moves between mask's parts or outside the widget.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+

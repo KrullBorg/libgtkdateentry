@@ -108,6 +108,11 @@ GtkDateEntry *date
 GtkDateEntry *date,gboolean is_editable
 </FUNCTION>
 <FUNCTION>
+<NAME>gtk_date_entry_set_editable_with_calendar</NAME>
+<RETURNS>void </RETURNS>
+GtkDateEntry *date,gboolean is_editable_with_calendar
+</FUNCTION>
+<FUNCTION>
 <NAME>gtk_date_entry_set_calendar_button_visible</NAME>
 <RETURNS>void </RETURNS>
 GtkDateEntry *date,gboolean is_visible
