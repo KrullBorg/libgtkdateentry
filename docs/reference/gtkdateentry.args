@@ -3,8 +3,8 @@
 <TYPE>gboolean</TYPE>
 <RANGE></RANGE>
 <FLAGS>rw</FLAGS>
-<NICK>Tabulation inside the widget</NICK>
-<BLURB>Whether pressing tab moves between mask's parts or outside the widget.</BLURB>
+<NICK>TRUE if it is editable only from calendar</NICK>
+<BLURB>Determines if the user can edit the text in the #GtkDateEntry widget only from the calendar or not.</BLURB>
 <DEFAULT>FALSE</DEFAULT>
 </ARG>
 

@@ -133,8 +133,9 @@ gtk_date_entry_class_init (GtkDateEntryClass *klass)
 
 	g_object_class_install_property (object_class, PROP_EDITABLE_WITH_CALENDAR,
 	                                 g_param_spec_boolean ("editable-with-calendar",
-	                                                       "Tabulation inside the widget",
-	                                                       "Whether pressing tab moves between mask's parts or outside the widget",
+	                                                       "TRUE if it is editable only from calendar",
+	                                                       "Determines if the user can edit the text"
+	                                                       " in the #GtkDateEntry widget only from the calendar or not",
 	                                                       FALSE,
 	                                                       G_PARAM_READWRITE));
 }
@@ -163,7 +164,7 @@ gtk_date_entry_init (GtkDateEntry *date)
 	gtk_widget_show (priv->btnCalendar);
 
 	g_signal_connect (G_OBJECT (priv->btnCalendar), "toggled",
-										G_CALLBACK (btnCalendar_on_toggled), (gpointer)date);
+	                  G_CALLBACK (btnCalendar_on_toggled), (gpointer)date);
 
 	arrow = (GtkWidget *)gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (priv->btnCalendar), arrow);
@@ -266,7 +267,7 @@ gtk_date_entry_set_format (GtkDateEntry *date, const gchar *format)
 		}
 	
 	format_ = g_strstrip (g_strdup (format));
-  if (strlen (format_) != 3)
+	if (strlen (format_) != 3)
 		{
 			return FALSE;
 		}
@@ -298,7 +299,7 @@ gtk_date_entry_set_format (GtkDateEntry *date, const gchar *format)
 
 	gdate = gtk_date_entry_get_gdate (date);
 
-  priv->format = g_strdup (format);
+	priv->format = g_strdup (format);
 	gtk_date_entry_change_mask (date);
 	gtk_date_entry_set_date_gdate (date, gdate);
 
@@ -318,7 +319,7 @@ const gchar
 {
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
-  return gtk_entry_get_text (GTK_ENTRY (priv->day));
+	return gtk_entry_get_text (GTK_ENTRY (priv->day));
 }
 
 /**
@@ -861,9 +862,11 @@ btnCalendar_on_toggled (GtkToggleButton *togglebutton,
 			if (x < 0) x = 0;
 			if (y < 0) y = 0;
 
+			gtk_editable_set_position (GTK_EDITABLE (priv->day), 0);
+
 			gtk_grab_add (wCalendar);
 			gtk_window_move (GTK_WINDOW (wCalendar), x, y);
-      gtk_widget_show (wCalendar);
+			gtk_widget_show (wCalendar);
 			gtk_widget_grab_focus (priv->calendar);
 			popup_grab_on_window (wCalendar->window, gtk_get_current_event_time ());
 		}
