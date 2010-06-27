@@ -117,3 +117,72 @@ GtkDateEntry *date, gboolean is_editable_with_calendar
 <RETURNS>void </RETURNS>
 GtkDateEntry *date, gboolean is_visible 
 </FUNCTION>
+<MACRO>
+<NAME>GTK_FORM_TYPE_WIDGET_DATE_ENTRY</NAME>
+#define GTK_FORM_TYPE_WIDGET_DATE_ENTRY                 (gtk_form_widget_date_entry_get_type ())
+</MACRO>
+<MACRO>
+<NAME>GTK_FORM_WIDGET_DATE_ENTRY</NAME>
+#define GTK_FORM_WIDGET_DATE_ENTRY(obj)                 (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_FORM_TYPE_WIDGET_DATE_ENTRY, GtkFormWidgetDateEntry))
+</MACRO>
+<MACRO>
+<NAME>GTK_FORM_WIDGET_DATE_ENTRY_CLASS</NAME>
+#define GTK_FORM_WIDGET_DATE_ENTRY_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_FORM_TYPE_WIDGET_DATE_ENTRY, GtkFormWidgetDateEntryClass))
+</MACRO>
+<MACRO>
+<NAME>GTK_FORM_IS_WIDGET_DATE_ENTRY</NAME>
+#define GTK_FORM_IS_WIDGET_DATE_ENTRY(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_FORM_TYPE_WIDGET_DATE_ENTRY))
+</MACRO>
+<MACRO>
+<NAME>GTK_FORM_IS_WIDGET_DATE_ENTRY_CLASS</NAME>
+#define GTK_FORM_IS_WIDGET_DATE_ENTRY_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_FORM_TYPE_WIDGET_DATE_ENTRY))
+</MACRO>
+<MACRO>
+<NAME>GTK_FORM_WIDGET_DATE_ENTRY_GET_CLASS</NAME>
+#define GTK_FORM_WIDGET_DATE_ENTRY_GET_CLASS(obj)       (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_FORM_TYPE_WIDGET_DATE_ENTRY, GtkFormWidgetDateEntryClass))
+</MACRO>
+<STRUCT>
+<NAME>GtkFormWidgetDateEntry</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GtkFormWidgetDateEntryClass</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GtkFormWidgetDateEntry</NAME>
+struct _GtkFormWidgetDateEntry
+	{
+		GtkFormWidget parent;
+	};
+</STRUCT>
+<STRUCT>
+<NAME>GtkFormWidgetDateEntryClass</NAME>
+struct _GtkFormWidgetDateEntryClass
+	{
+		GtkFormWidgetClass parent_class;
+	};
+</STRUCT>
+<FUNCTION>
+<NAME>gtk_form_widget_date_entry_get_type</NAME>
+<RETURNS>GType </RETURNS>
+void 
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_form_widget_date_entry_new</NAME>
+<RETURNS>GtkFormWidget *</RETURNS>
+void 
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_form_widget_date_entry_get_value_stringify</NAME>
+<RETURNS>gchar *</RETURNS>
+GtkFormWidget *widget 
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_form_widget_date_entry_set_value_stringify</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkFormWidget *fwidget, const gchar *value 
+</FUNCTION>
+<FUNCTION>
+<NAME>gtk_form_widget_date_entry_set_editable</NAME>
+<RETURNS>void </RETURNS>
+GtkFormWidget *fwidget, gboolean editable 
+</FUNCTION>

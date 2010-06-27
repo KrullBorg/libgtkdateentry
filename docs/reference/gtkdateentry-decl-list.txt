@@ -27,3 +27,22 @@ gtk_date_entry_get_type
 GTK_IS_DATE_CLASS
 </SECTION>
 
+<SECTION>
+<FILE>gtkformwidgetdateentry</FILE>
+<TITLE>GtkFormWidgetDateEntry</TITLE>
+GtkFormWidgetDateEntry
+GtkFormWidgetDateEntryClass
+gtk_form_widget_date_entry_new
+gtk_form_widget_date_entry_get_value_stringify
+gtk_form_widget_date_entry_set_value_stringify
+gtk_form_widget_date_entry_set_editable
+<SUBSECTION Standard>
+GTK_FORM_WIDGET_DATE_ENTRY
+GTK_FORM_IS_WIDGET_DATE_ENTRY
+GTK_FORM_TYPE_WIDGET_DATE_ENTRY
+gtk_form_widget_date_entry_get_type
+GTK_FORM_WIDGET_DATE_ENTRY_CLASS
+GTK_FORM_IS_WIDGET_DATE_ENTRY_CLASS
+GTK_FORM_WIDGET_DATE_ENTRY_GET_CLASS
+</SECTION>
+

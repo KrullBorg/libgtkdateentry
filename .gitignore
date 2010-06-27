@@ -46,3 +46,5 @@ mkinstalldirs
 stamp-it
 intltool-*
 Rules-quot
+tests/plugin_gtkform
+*.exe

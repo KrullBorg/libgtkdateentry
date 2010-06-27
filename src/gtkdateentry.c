@@ -422,21 +422,27 @@ GDate
 	gint i, pos = 0, val;
 	gchar *txt;
 	GDate *gdate;
+	GDateDay gday;
+	GDateMonth gmon;
+	GDateYear gyear;
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
+	gday = G_DATE_BAD_DAY;
+	gmon = G_DATE_BAD_MONTH;
+	gyear = G_DATE_BAD_YEAR;
+
 	txt = (gchar *)gtk_entry_get_text (GTK_ENTRY (priv->day));
-	gdate = g_date_new ();
 
 	for (i = 0; i < 3; i++)
 		{
 			switch (priv->format[i])
 				{
 					case 'd':
-						val = atol (g_strndup (txt + pos, 2));
+						val = strtol (g_strndup (txt + pos, 2), NULL, 10);
 						if (g_date_valid_day ((GDateDay)val))
 							{
-								g_date_set_day (gdate, (GDateDay)val);
+								gday = (GDateDay)val;
 								pos += 3;
 							}
 						else
@@ -446,10 +452,10 @@ GDate
 						break;
 
 					case 'm':
-						val = atol (g_strndup (txt + pos, 2));
+						val = strtol (g_strndup (txt + pos, 2), NULL, 10);
 						if (g_date_valid_month ((GDateMonth)val))
 							{
-								g_date_set_month (gdate, (GDateMonth)val);
+								gmon = (GDateMonth)val;
 								pos += 3;
 							}
 						else
@@ -459,10 +465,10 @@ GDate
 						break;
 
 					case 'Y':
-						val = atol (g_strndup (txt + pos, 4));
+						val = strtol (g_strndup (txt + pos, 4), NULL, 10);
 						if (g_date_valid_year ((GDateYear)val))
 							{
-								g_date_set_year (gdate, (GDateYear)val);
+								gyear = (GDateYear)val;
 								pos += 5;
 							}
 						else
@@ -473,7 +479,16 @@ GDate
 				}
 		}
 
-	return gdate;
+	if (g_date_valid_day (gday)
+		&& g_date_valid_month (gmon)
+		&& g_date_valid_year (gyear))
+		{
+			return g_date_new_dmy (gday, gmon, gyear);
+		}
+	else
+		{
+			return NULL;
+		}
 }
 
 /**

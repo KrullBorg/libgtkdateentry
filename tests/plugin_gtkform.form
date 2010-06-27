@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<gtkform>
+
+	<table>clients</table>
+
+	<widget type="date_entry" name="gtkdateentry1" label="label1">
+		<field type="datetime" name="data">
+			<obligatory>TRUE</obligatory>
+			<datetime-type>date</datetime-type>
+			<obligatory>TRUE</obligatory>
+		</field>
+	</widget>
+
+</gtkform>
