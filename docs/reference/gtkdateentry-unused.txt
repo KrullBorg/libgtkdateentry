@@ -1,4 +1,3 @@
-GtkDateEntryClass
 gtk_date_entry_get_gdate
 gtk_date_entry_get_tm
 gtk_date_entry_is_valid

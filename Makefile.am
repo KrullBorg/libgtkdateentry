@@ -1,13 +1,18 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src tests docs
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
+
+if GLADEUI
+SUBDIRS_GLADE = glade
+else
+SUBDIRS_GLADE =
+endif
+SUBDIRS = src tests docs $(SUBDIRS_GLADE)
 
 EXTRA_DIST = libgtkdateentry.pc.in
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgtkdateentry.pc
-
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
 distclean-local:
 	if test "$(srcdir)" = "."; then :; else \

@@ -17,6 +17,9 @@ A Gtk+ widget that simplifies date input.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT GtkDateEntry ##### -->
 <para>
 The #GtkDateEntry struct contains private data only, and should be manipulated 

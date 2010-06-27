@@ -1,11 +1,12 @@
 <SECTION>
 <FILE>gtkdateentry</FILE>
+<TITLE>GtkDateEntry</TITLE>
 GTK_TYPE_DATE_ENTRY
 GTK_DATE_ENTRY
 GTK_DATE_ENTRY_CLASS
 GTK_DATE_ENTRY_GET_CLASS
-<TITLE>GtkDateEntry</TITLE>
 GtkDateEntry
+GtkDateEntryClass
 gtk_date_entry_new
 gtk_date_entry_set_separator
 gtk_date_entry_set_format

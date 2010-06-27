@@ -33,6 +33,8 @@ PKG_CHECK_MODULES(GTKDATEENTRY, [gtk+-2.0 >= 2.6.8
                                  libgtkmaskedentry >= 0.0.1])
 PKG_CHECK_EXISTS(gladeui-1.0 >= 3.2.0, [GLADEUI_FOUND=yes], [GLADEUI_FOUND=no])
 
+AM_CONDITIONAL(GLADEUI, test $GLADEUI_FOUND = yes)
+
 AC_SUBST(GTKDATEENTRY_CFLAGS)
 AC_SUBST(GTKDATEENTRY_LIBS)
 
@@ -51,8 +53,11 @@ if test $GLADEUI_FOUND = yes; then
 AC_CONFIG_FILES([
   glade/Makefile
   glade/icons/Makefile
-  glade/icons/16x16/Makefile
-  glade/icons/22x22/Makefile
+  glade/icons/hicolor/Makefile
+  glade/icons/hicolor/16x16/Makefile
+  glade/icons/hicolor/16x16/actions/Makefile
+  glade/icons/hicolor/22x22/Makefile
+  glade/icons/hicolor/22x22/actions/Makefile
 ])
 fi
 

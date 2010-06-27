@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glade-catalog name="gtkdateentry" library="gtkdateentry" depends="gtk+" domain="gtkdateentry" book="gtkdatedentry">
+
+	<glade-widget-classes>
+		<glade-widget-class name="GtkDateEntry" generic-name="gtkdateentry" title="Date Entry">
+			<properties>
+				<property name="Editable with calendar" id="editable_with_calendar" />
+			</properties>
+		</glade-widget-class>
+	</glade-widget-classes>
+  
+	<glade-widget-group name="gtk-control-display" title="Control and Display">
+		<glade-widget-class-ref name="GtkDateEntry" />
+	</glade-widget-group>
+
+</glade-catalog>
