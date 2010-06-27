@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT([GtkDateEntry], [0.0.2], [azagli@inwind.it])
+AC_INIT([GtkDateEntry], [0.0.3], [azagli@libero.it])
 AC_CONFIG_SRCDIR([src/gtkdateentry.c])
 AC_CONFIG_HEADER([config.h])
 
@@ -31,6 +31,7 @@ GTK_DOC_CHECK(1.0)
 
 PKG_CHECK_MODULES(GTKDATEENTRY, [gtk+-2.0 >= 2.6.8
                                  libgtkmaskedentry >= 0.0.1])
+PKG_CHECK_EXISTS(gladeui-1.0 >= 3.2.0, [GLADEUI_FOUND=yes], [GLADEUI_FOUND=no])
 
 AC_SUBST(GTKDATEENTRY_CFLAGS)
 AC_SUBST(GTKDATEENTRY_LIBS)
@@ -45,4 +46,14 @@ AC_CONFIG_FILES([
   docs/reference/Makefile
   docs/reference/version.xml
 ])
+
+if test $GLADEUI_FOUND = yes; then
+AC_CONFIG_FILES([
+  glade/Makefile
+  glade/icons/Makefile
+  glade/icons/16x16/Makefile
+  glade/icons/22x22/Makefile
+])
+fi
+
 AC_OUTPUT

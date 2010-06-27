@@ -1,7 +1,7 @@
 /*
  * GtkDateEntry widget for GTK+
  *
- * Copyright (C) 2005-2006 Andrea Zagli <azagli@libero.it>
+ * Copyright (C) 2005-2010 Andrea Zagli <azagli@libero.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -272,7 +272,7 @@ gtk_date_entry_set_format (GtkDateEntry *date, const gchar *format)
 
 	gdate = gtk_date_entry_get_gdate (date);
 
-  priv->format = g_strdup (format);
+	priv->format = g_strdup (format);
 	gtk_date_entry_change_mask (date);
 	gtk_date_entry_set_date_gdate (date, gdate);
 
@@ -292,7 +292,7 @@ const gchar
 {
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
-  return gtk_entry_get_text (GTK_ENTRY (priv->day));
+	return gtk_entry_get_text (GTK_ENTRY (priv->day));
 }
 
 /**
@@ -819,7 +819,7 @@ btnCalendar_on_toggled (GtkToggleButton *togglebutton,
 
 			gtk_grab_add (wCalendar);
 			gtk_window_move (GTK_WINDOW (wCalendar), x, y);
-      gtk_widget_show (wCalendar);
+			gtk_widget_show (wCalendar);
 			gtk_widget_grab_focus (priv->calendar);
 			popup_grab_on_window (wCalendar->window, gtk_get_current_event_time ());
 		}
