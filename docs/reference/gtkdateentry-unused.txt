@@ -7,3 +7,4 @@ gtk_date_entry_set_date_gdate
 gtk_date_entry_set_date_strf
 gtk_date_entry_set_date_tm
 gtk_date_entry_set_editable
+gtk_date_entry_set_editable_with_calendar

@@ -18,6 +18,7 @@ gtk_date_entry_set_date_tm
 gtk_date_entry_set_date_gdate
 gtk_date_entry_is_valid
 gtk_date_entry_set_editable
+gtk_date_entry_set_editable_with_calendar
 gtk_date_entry_set_calendar_button_visible
 <SUBSECTION Standard>
 GTK_IS_DATE

@@ -86,6 +86,8 @@ gboolean gtk_date_entry_is_valid (GtkDateEntry *date);
 
 void gtk_date_entry_set_editable (GtkDateEntry *date,
                                   gboolean is_editable);
+void gtk_date_entry_set_editable_with_calendar (GtkDateEntry *date,
+                                  gboolean is_editable_with_calendar);
 
 void gtk_date_entry_set_calendar_button_visible (GtkDateEntry *date,
                                                  gboolean is_visible);

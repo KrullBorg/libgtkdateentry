@@ -33,6 +33,12 @@
 
 #include "gtkdateentry.h"
 
+enum
+{
+	PROP_0,
+	PROP_EDITABLE_WITH_CALENDAR
+};
+
 static void gtk_date_entry_class_init (GtkDateEntryClass *klass);
 static void gtk_date_entry_init (GtkDateEntry *date);
 
@@ -56,6 +62,15 @@ static void calendar_on_day_selected (GtkCalendar *calendar,
 static void calendar_on_day_selected_double_click (GtkCalendar *calendar,
                                                    gpointer user_data);
 
+static void gtk_date_entry_set_property (GObject *object,
+                                           guint property_id,
+                                           const GValue *value,
+                                           GParamSpec *pspec);
+static void gtk_date_entry_get_property (GObject *object,
+                                           guint property_id,
+                                           GValue *value,
+                                           GParamSpec *pspec);
+
 static GtkWidgetClass *parent_class = NULL;
 
 
@@ -71,6 +86,7 @@ struct _GtkDateEntryPrivate
 
 		gchar separator;
 		gchar *format;
+		gboolean editable_with_calendar;
 	};
 
 GType
@@ -111,6 +127,17 @@ gtk_date_entry_class_init (GtkDateEntryClass *klass)
 
 	widget_class = (GtkWidgetClass*) klass;
 	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->set_property = gtk_date_entry_set_property;
+	object_class->get_property = gtk_date_entry_get_property;
+
+	g_object_class_install_property (object_class, PROP_EDITABLE_WITH_CALENDAR,
+	                                 g_param_spec_boolean ("editable-with-calendar",
+	                                                       "TRUE if it is editable only from calendar",
+	                                                       "Determines if the user can edit the text"
+	                                                       " in the #GtkDateEntry widget only from the calendar or not",
+	                                                       FALSE,
+	                                                       G_PARAM_READWRITE));
 }
 
 static void
@@ -137,7 +164,7 @@ gtk_date_entry_init (GtkDateEntry *date)
 	gtk_widget_show (priv->btnCalendar);
 
 	g_signal_connect (G_OBJECT (priv->btnCalendar), "toggled",
-										G_CALLBACK (btnCalendar_on_toggled), (gpointer)date);
+	                  G_CALLBACK (btnCalendar_on_toggled), (gpointer)date);
 
 	arrow = (GtkWidget *)gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (priv->btnCalendar), arrow);
@@ -240,7 +267,7 @@ gtk_date_entry_set_format (GtkDateEntry *date, const gchar *format)
 		}
 	
 	format_ = g_strstrip (g_strdup (format));
-  if (strlen (format_) != 3)
+	if (strlen (format_) != 3)
 		{
 			return FALSE;
 		}
@@ -630,6 +657,24 @@ gtk_date_entry_set_editable (GtkDateEntry *date,
 }
 
 /**
+ * gtk_date_entry_set_editable_with_calendar:
+ * @date:  a #GtkDateEntry.
+ * @is_editable_with_calendar: TRUE if the user is allowed to edit the text
+ * in the widget only from the calendar.
+ *
+ * Determines if the user can edit the text in the #GtkDateEntry widget only
+ * from the calendar or not.
+ */
+void
+gtk_date_entry_set_editable_with_calendar (GtkDateEntry *date,
+                                  gboolean is_editable_with_calendar)
+{
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
+
+	gtk_editable_set_editable (GTK_EDITABLE (priv->day), !is_editable_with_calendar);
+}
+
+/**
  * gtk_date_entry_set_calendar_button_visible:
  * @date: a #GtkDateEntry.
  * @is_visible: TRUE if the calendar's button must be visible.
@@ -817,6 +862,8 @@ btnCalendar_on_toggled (GtkToggleButton *togglebutton,
 			if (x < 0) x = 0;
 			if (y < 0) y = 0;
 
+			gtk_editable_set_position (GTK_EDITABLE (priv->day), 0);
+
 			gtk_grab_add (wCalendar);
 			gtk_window_move (GTK_WINDOW (wCalendar), x, y);
 			gtk_widget_show (wCalendar);
@@ -843,4 +890,42 @@ calendar_on_day_selected_double_click (GtkCalendar *calendar,
                                        gpointer user_data)
 {
 	hide_popup ((GtkWidget *)user_data);
+}
+
+static void
+gtk_date_entry_set_property (GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
+{
+	GtkDateEntry *date_entry = GTK_DATE_ENTRY (object);
+
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date_entry);
+
+	switch (property_id)
+		{
+			case PROP_EDITABLE_WITH_CALENDAR:
+				gtk_date_entry_set_editable_with_calendar (date_entry, g_value_get_boolean (value));
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+				break;
+		}
+}
+
+static void
+gtk_date_entry_get_property (GObject *object, guint property_id, GValue *value, GParamSpec *pspec)
+{
+	GtkDateEntry *date_entry = GTK_DATE_ENTRY (object);
+
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date_entry);
+
+	switch (property_id)
+		{
+			case PROP_EDITABLE_WITH_CALENDAR:
+				g_value_set_boolean (value, priv->editable_with_calendar);
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+				break;
+		}
 }

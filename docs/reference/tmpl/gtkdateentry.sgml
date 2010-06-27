@@ -24,6 +24,11 @@ using the functions below.
 </para>
 
 
+<!-- ##### ARG GtkDateEntry:editable-with-calendar ##### -->
+<para>
+
+</para>
+
 <!-- ##### FUNCTION gtk_date_entry_new ##### -->
 <para>
 
