@@ -1,7 +1,7 @@
 /*
  * GtkDateEntry widget for GTK+
  *
- * Copyright (C) 2005-2010 Andrea Zagli <azagli@libero.it>
+ * Copyright (C) 2005-2011 Andrea Zagli <azagli@libero.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@
 #include <time.h>
 
 #include <gdk/gdk.h>
-#include <gtk/gtkhbox.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -33,8 +33,8 @@ G_BEGIN_DECLS
 #define GTK_TYPE_DATE_ENTRY           (gtk_date_entry_get_type ())
 #define GTK_DATE_ENTRY(obj)           (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_DATE_ENTRY, GtkDateEntry))
 #define GTK_DATE_ENTRY_CLASS(klass)   (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_DATE_ENTRY, GtkDateEntry))
-#define GTK_IS_DATE(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_DATE_ENTRY))
-#define GTK_IS_DATE_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_DATE_ENTRY))
+#define GTK_IS_DATE_ENTRY(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_DATE_ENTRY))
+#define GTK_IS_DATE_ENTRY_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_DATE_ENTRY))
 #define GTK_DATE_ENTRY_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_DATE_ENTRY, GtkDateEntry))
 
 
@@ -44,12 +44,12 @@ typedef struct _GtkDateEntryClass GtkDateEntryClass;
 
 struct _GtkDateEntry
 {
-  GtkHBox hbox;
+	GtkBin parent;
 };
 
 struct _GtkDateEntryClass
 {
-  GtkHBoxClass parent_class;
+	GtkBinClass parent_class;
 };
 
 

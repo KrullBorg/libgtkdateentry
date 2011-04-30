@@ -1,7 +1,7 @@
 /*
  * GtkDateEntry widget for GTK+
  *
- * Copyright (C) 2005-2010 Andrea Zagli <azagli@libero.it>
+ * Copyright (C) 2005-2011 Andrea Zagli <azagli@libero.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,11 +23,7 @@
 
 #include <gdk/gdkkeysyms.h>
 
-#include <gtk/gtkmain.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtktogglebutton.h>
-#include <gtk/gtkwindow.h>
-#include <gtk/gtkcalendar.h>
+#include <gtk/gtk.h>
 
 #include <gtkmaskedentry.h>
 
@@ -41,6 +37,11 @@ enum
 
 static void gtk_date_entry_class_init (GtkDateEntryClass *klass);
 static void gtk_date_entry_init (GtkDateEntry *date);
+
+static void gtk_date_entry_size_request (GtkWidget *widget,
+                                    GtkRequisition *requisition);
+static void gtk_date_entry_size_allocate (GtkWidget *widget,
+                                     GtkAllocation *allocation);
 
 static void gtk_date_entry_change_mask (GtkDateEntry *date);
 
@@ -79,6 +80,7 @@ static GtkWidgetClass *parent_class = NULL;
 typedef struct _GtkDateEntryPrivate GtkDateEntryPrivate;
 struct _GtkDateEntryPrivate
 	{
+		GtkWidget *hbox;
 		GtkWidget *day;
 		GtkWidget *btnCalendar;
 		GtkWidget *wCalendar;
@@ -89,32 +91,7 @@ struct _GtkDateEntryPrivate
 		gboolean editable_with_calendar;
 	};
 
-GType
-gtk_date_entry_get_type (void)
-{
-	static GType date_type = 0;
-
-	if (!date_type)
-		{
-			static const GTypeInfo date_info =
-			{
-				sizeof (GtkDateEntryClass),
-				NULL,		/* base_init */
-				NULL,		/* base_finalize */
-				(GClassInitFunc) gtk_date_entry_class_init,
-				NULL,		/* class_finalize */
-				NULL,		/* class_data */
-				sizeof (GtkDateEntry),
-				0,		/* n_preallocs */
-				(GInstanceInitFunc) gtk_date_entry_init,
-			};
-
-			date_type = g_type_register_static (GTK_TYPE_HBOX, "GtkDateEntry",
-			                                    &date_info, 0);
-		}
-
-	return date_type;
-}
+G_DEFINE_TYPE (GtkDateEntry, gtk_date_entry, GTK_TYPE_BIN)
 
 static void
 gtk_date_entry_class_init (GtkDateEntryClass *klass)
@@ -130,6 +107,9 @@ gtk_date_entry_class_init (GtkDateEntryClass *klass)
 
 	object_class->set_property = gtk_date_entry_set_property;
 	object_class->get_property = gtk_date_entry_get_property;
+
+	widget_class->size_request = gtk_date_entry_size_request;
+	widget_class->size_allocate = gtk_date_entry_size_allocate;
 
 	g_object_class_install_property (object_class, PROP_EDITABLE_WITH_CALENDAR,
 	                                 g_param_spec_boolean ("editable-with-calendar",
@@ -153,13 +133,17 @@ gtk_date_entry_init (GtkDateEntry *date)
 	priv->separator = '/';
 	priv->format = g_strdup ("dmY");
 
+	priv->hbox = gtk_hbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (date), priv->hbox);
+	gtk_widget_show (priv->hbox);
+
 	priv->day = gtk_masked_entry_new ();
 	gtk_date_entry_change_mask (date);
-	gtk_box_pack_start (GTK_BOX (date), priv->day, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->day, TRUE, TRUE, 0);
 	gtk_widget_show (priv->day);
 
 	priv->btnCalendar = gtk_toggle_button_new ();
-	gtk_box_pack_start (GTK_BOX (date), priv->btnCalendar, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->btnCalendar, FALSE, FALSE, 0);
 	gtk_widget_set_no_show_all (priv->btnCalendar, TRUE);
 	gtk_widget_show (priv->btnCalendar);
 
@@ -189,9 +173,9 @@ gtk_date_entry_init (GtkDateEntry *date)
 	gtk_widget_show (priv->calendar);
 
 	g_signal_connect (G_OBJECT (priv->calendar), "day-selected",
-										G_CALLBACK (calendar_on_day_selected), (gpointer)date);
+	                  G_CALLBACK (calendar_on_day_selected), (gpointer)date);
 	g_signal_connect (G_OBJECT (priv->calendar), "day-selected-double-click",
-										G_CALLBACK (calendar_on_day_selected_double_click), (gpointer)date);
+	                  G_CALLBACK (calendar_on_day_selected_double_click), (gpointer)date);
 }
 
 /**
@@ -542,33 +526,24 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 				{
 					case 'd':
 						if (!g_date_valid_day ((GDateDay)atol (g_strndup (str + pos, 2)))) return FALSE;
-						/*txt = g_strjoin (NULL, txt, g_strndup (str + pos, 2), NULL);*/
-						day = (GDateDay)atol (g_strndup (str + pos, 2));
+						day = (GDateDay)strtol (g_strndup (str + pos, 2), NULL, 10);
 						pos += 3;
 						break;
 
 					case 'm':
 						if (!g_date_valid_month ((GDateMonth)atol (g_strndup (str + pos, 2)))) return FALSE;
-						/*txt = g_strjoin (NULL, txt, g_strndup (str + pos, 2), NULL);*/
-						month = (GDateMonth)atol (g_strndup (str + pos, 2));
+						month = (GDateMonth)strtol (g_strndup (str + pos, 2), NULL, 10);
 						pos += 3;
 						break;
 
 					case 'Y':
 						if (!g_date_valid_year ((GDateYear)atol (g_strndup (str + pos, 4)))) return FALSE;
-						/*txt = g_strjoin (NULL, txt, g_strndup (str + pos, 4), NULL);*/
-						year = (GDateYear)atol (g_strndup (str + pos, 4));
+						year = (GDateYear)strtol (g_strndup (str + pos, 4), NULL, 10);
 						pos += 5;
 						break;
 				}
-
-			/*if (i < 2)
-				{
-					txt = g_strjoin (NULL, txt, g_strdup_printf ("%c", sep), NULL);
-				}*/
 		}
 
-	/*gtk_entry_set_text (GTK_ENTRY (date->day), txt);*/
 	gtk_date_entry_set_date_gdate (date, g_date_new_dmy (day, month, year));
 	return TRUE;
 }
@@ -895,9 +870,9 @@ calendar_on_day_selected (GtkCalendar *calendar,
 
 	gtk_calendar_get_date (calendar, &year, &month, &day);
 	gtk_date_entry_set_date_gdate ((GtkDateEntry *)user_data,
-                           g_date_new_dmy ((GDateDay)day,
-                                           (GDateMonth)(month + 1),
-                                           (GDateYear)year));
+	                               g_date_new_dmy ((GDateDay)day,
+	                                               (GDateMonth)(month + 1),
+	                                               (GDateYear)year));
 }
 
 static void
@@ -942,5 +917,71 @@ gtk_date_entry_get_property (GObject *object, guint property_id, GValue *value, 
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 				break;
+		}
+}
+
+static void
+gtk_date_entry_size_request (GtkWidget *widget,
+                        GtkRequisition *requisition)
+{
+	GtkDateEntry *date_entry;
+	GtkBin *bin;
+	GtkRequisition child_requisition;
+
+	guint border_width;
+
+	g_return_if_fail (GTK_IS_DATE_ENTRY (widget));
+	g_return_if_fail (requisition != NULL);
+
+	date_entry = GTK_DATE_ENTRY (widget);
+	bin = GTK_BIN (date_entry);
+
+	requisition->width = 0;
+	requisition->height = 0;
+
+	if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
+		{
+			gtk_widget_size_request (bin->child, &child_requisition);
+			requisition->width += child_requisition.width;
+			requisition->height += child_requisition.height;
+		}
+
+	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
+	requisition->width += (border_width * 2);
+	requisition->height += (border_width * 2);
+}
+
+static void
+gtk_date_entry_size_allocate (GtkWidget *widget,
+                         GtkAllocation *allocation)
+{
+	GtkDateEntry *date_entry;
+	GtkBin *bin;
+	GtkAllocation relative_allocation;
+	GtkAllocation child_allocation;
+
+	guint border_width;
+
+	g_return_if_fail (GTK_IS_DATE_ENTRY (widget));
+	g_return_if_fail (allocation != NULL);
+
+	date_entry = GTK_DATE_ENTRY (widget);
+	bin = GTK_BIN (date_entry);
+
+	gtk_widget_set_allocation (widget, allocation);
+
+	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
+	relative_allocation.x = border_width;
+	relative_allocation.y = border_width;
+	relative_allocation.width = MAX (1, (gint)widget->allocation.width - relative_allocation.x * 2);
+	relative_allocation.height = MAX (1, (gint)widget->allocation.height - relative_allocation.y * 2);
+
+	if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
+		{
+			child_allocation.x = relative_allocation.x + allocation->x;
+			child_allocation.y = relative_allocation.y + allocation->y;
+			child_allocation.width = relative_allocation.width;
+			child_allocation.height = relative_allocation.height;
+			gtk_widget_size_allocate (bin->child, &child_allocation);
 		}
 }
