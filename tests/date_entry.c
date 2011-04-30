@@ -43,7 +43,7 @@ on_btnSeparator_clicked (GtkButton *button,
                          gpointer user_data)
 {
 	gtk_date_entry_set_separator (GTK_DATE_ENTRY (date),
-	                              (const gchar)(gtk_entry_get_text (GTK_ENTRY (separator))[0]));
+	                              gtk_entry_get_text (GTK_ENTRY (separator)));
 }
 
 static void
@@ -137,7 +137,7 @@ main (int argc, char **argv)
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 	gtk_widget_show (label);
 
-	date = gtk_date_entry_new ("dmY", '/', TRUE);
+	date = gtk_date_entry_new (NULL, NULL, TRUE);
 	gtk_table_attach (GTK_TABLE (table), date, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 	gtk_widget_show (date);
 

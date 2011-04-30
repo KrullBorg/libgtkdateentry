@@ -20,6 +20,7 @@
  */
 
 #include <string.h>
+#include <langinfo.h>
 
 #include <gdk/gdkkeysyms.h>
 
@@ -72,6 +73,9 @@ static void gtk_date_entry_get_property (GObject *object,
                                            GValue *value,
                                            GParamSpec *pspec);
 
+static gchar *gtk_date_entry_get_separator_from_locale ();
+static gchar *gtk_date_entry_get_format_from_locale ();
+
 static GtkWidgetClass *parent_class = NULL;
 
 
@@ -86,7 +90,7 @@ struct _GtkDateEntryPrivate
 		GtkWidget *wCalendar;
 		GtkWidget *calendar;
 
-		gchar separator;
+		gchar *separator;
 		gchar *format;
 		gboolean editable_with_calendar;
 	};
@@ -130,8 +134,8 @@ gtk_date_entry_init (GtkDateEntry *date)
 	/* TO DO
 	 * read separator and format from locale settings
 	 */
-	priv->separator = '/';
-	priv->format = g_strdup ("dmY");
+	priv->separator = gtk_date_entry_get_separator_from_locale ();
+	priv->format = gtk_date_entry_get_format_from_locale ();
 
 	priv->hbox = gtk_hbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (date), priv->hbox);
@@ -193,12 +197,38 @@ gtk_date_entry_init (GtkDateEntry *date)
  * Returns: The newly created #GtkDateEntry widget.
  */
 GtkWidget
-*gtk_date_entry_new (const gchar *format, const gchar separator, gboolean calendar_button_is_visible)
+*gtk_date_entry_new (const gchar *format, const gchar *separator, gboolean calendar_button_is_visible)
 {
+	gchar *_format;
+	gchar *_separator;
+
 	GtkWidget *w = GTK_WIDGET (g_object_new (gtk_date_entry_get_type (), NULL));
 
-	if (!gtk_date_entry_set_format (GTK_DATE_ENTRY (w), format)) return NULL;
-	gtk_date_entry_set_separator (GTK_DATE_ENTRY (w), separator);
+	if (format == NULL)
+		{
+			_format = gtk_date_entry_get_format_from_locale ();
+		}
+	else
+		{
+			_format = g_strdup (format);
+		}
+	if (!gtk_date_entry_set_format (GTK_DATE_ENTRY (w), _format))
+		{
+			return NULL;
+		}
+
+	if (separator == NULL)
+		{
+			_separator = gtk_date_entry_get_separator_from_locale ();
+		}
+	else
+		{
+			_separator = g_strdup (separator);
+		}
+	if (!gtk_date_entry_set_separator (GTK_DATE_ENTRY (w), _separator))
+		{
+			return NULL;
+		}
 
 	gtk_date_entry_set_calendar_button_visible (GTK_DATE_ENTRY (w), calendar_button_is_visible);
 
@@ -212,16 +242,30 @@ GtkWidget
  *
  * Set the separator between day, month and year.
  */
-void
-gtk_date_entry_set_separator (GtkDateEntry *date, const gchar separator)
+gboolean
+gtk_date_entry_set_separator (GtkDateEntry *date, const gchar *separator)
 {
+	gchar *_separator;
+
 	GDate *gdate = gtk_date_entry_get_gdate (date);
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
-	priv->separator = separator;
+	if (separator == NULL)
+		{
+			return FALSE;
+		}
+	_separator = g_strstrip (g_strdup (separator));
+	if (strlen (_separator) != 1)
+		{
+			return FALSE;
+		}
+
+	priv->separator = g_strdup (_separator);
 	gtk_date_entry_change_mask (date);
 	gtk_date_entry_set_date_gdate (date, gdate);
+
+	g_free (_separator);
 }
 
 /**
@@ -258,7 +302,7 @@ gtk_date_entry_set_format (GtkDateEntry *date, const gchar *format)
 
 	for (i = 0; i < 3; i++)
 		{
-			switch (format[i])
+			switch (format_[i])
 				{
 					case 'd':
 						if (d) return FALSE;
@@ -283,9 +327,11 @@ gtk_date_entry_set_format (GtkDateEntry *date, const gchar *format)
 
 	gdate = gtk_date_entry_get_gdate (date);
 
-	priv->format = g_strdup (format);
+	priv->format = g_strdup (format_);
 	gtk_date_entry_change_mask (date);
 	gtk_date_entry_set_date_gdate (date, gdate);
+
+	g_free (format_);
 
 	return TRUE;
 }
@@ -318,9 +364,9 @@ const gchar
 const gchar
 *gtk_date_entry_get_strf (GtkDateEntry *date,
                           const gchar *format,
-                          gchar separator)
+                          const gchar *separator)
 {
-	gchar *fmt, sep, *ret = "";
+	gchar *fmt, *sep, *ret = "";
 	gint i;
 	GDate *gdate = (GDate *)gtk_date_entry_get_gdate (date);
 
@@ -339,13 +385,13 @@ const gchar
 		{
 			fmt = g_strdup (format);
 		}
-	if (separator == 0)
+	if (separator == NULL)
 		{
 			sep = priv->separator;
 		}
 	else
 		{
-			sep = (gchar)separator;
+			sep = (gchar *)separator;
 		}
 
 	for (i = 0; i < 3; i++)
@@ -367,7 +413,7 @@ const gchar
 
 			if (i < 2)
 				{
-					ret = g_strjoin (NULL, ret, g_strdup_printf ("%c", sep), NULL);
+					ret = g_strjoin (NULL, ret, g_strdup_printf ("%s", sep), NULL);
 				}
 		}
 
@@ -491,10 +537,10 @@ gboolean
 gtk_date_entry_set_date_strf (GtkDateEntry *date,
                               const gchar *str,
                               const gchar *format,
-                              const gchar separator)
+                              const gchar *separator)
 {
 	gchar *fmt;
-	gchar sep;
+	gchar *sep;
 	GDateDay day;
 	GDateMonth month;
 	GDateYear year;
@@ -511,13 +557,13 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 		{
 			fmt = g_strdup (format);
 		}
-	if (separator == 0)
+	if (separator == NULL)
 		{
 			sep = priv->separator;
 		}
 	else
 		{
-			sep = (gchar)separator;
+			sep = (gchar *)separator;
 		}
 
 	for (i = 0; i < 3; i++)
@@ -600,7 +646,7 @@ gtk_date_entry_set_date_gdate (GtkDateEntry *date, const GDate *gdate)
 
 			if (i < 2)
 				{
-					txt = g_strjoin (NULL, txt, g_strdup_printf ("%c", priv->separator), NULL);
+					txt = g_strjoin (NULL, txt, g_strdup_printf ("%s", priv->separator), NULL);
 				}
 		}
 
@@ -708,7 +754,7 @@ gtk_date_entry_change_mask (GtkDateEntry *date)
 				}
 		}
 
-	mask = g_strdup_printf ("%s%c%s%c%s",
+	mask = g_strdup_printf ("%s%s%s%s%s",
 	                        format[0],
 	                        priv->separator,
 	                        format[1],
@@ -984,4 +1030,73 @@ gtk_date_entry_size_allocate (GtkWidget *widget,
 			child_allocation.height = relative_allocation.height;
 			gtk_widget_size_allocate (bin->child, &child_allocation);
 		}
+}
+
+static gchar
+*gtk_date_entry_get_separator_from_locale ()
+{
+	gchar *fmt;
+
+	gchar *lfmt;
+	guint l;
+	guint i;
+
+	fmt = NULL;
+
+	lfmt = nl_langinfo (D_FMT);
+	l = strlen (lfmt);
+	for (i = 0; i < l; i++)
+		{
+			switch (lfmt[i])
+				{
+					case 'd':
+					case 'm':
+					case 'y':
+					case 'Y':
+					case '%':
+						break;
+
+					default:
+						fmt = g_strdup_printf ("%c", lfmt[i]);
+						i = l;
+						break;
+				}
+		}
+
+	return fmt;
+}
+
+static gchar
+*gtk_date_entry_get_format_from_locale ()
+{
+	gchar *fmt;
+
+	gchar *lfmt;
+	guint l;
+	guint i;
+
+	fmt = NULL;
+
+	lfmt = nl_langinfo (D_FMT);
+	l = strlen (lfmt);
+	for (i = 0; i < l; i++)
+		{
+			switch (lfmt[i])
+				{
+					case 'd':
+						fmt = g_strconcat (fmt == NULL ? "" : fmt, "d", NULL);
+						break;
+
+					case 'm':
+						fmt = g_strconcat (fmt == NULL ? "" : fmt, "m", NULL);
+						break;
+
+					case 'y':
+					case 'Y':
+						fmt = g_strconcat (fmt == NULL ? "" : fmt, "Y", NULL);
+						break;
+				}
+		}
+
+	return fmt;
 }

@@ -56,18 +56,18 @@ struct _GtkDateEntryClass
 GType gtk_date_entry_get_type (void) G_GNUC_CONST;
 
 GtkWidget *gtk_date_entry_new (const gchar *format,
-                               const gchar separator,
+                               const gchar *separator,
                                gboolean calendar_button_is_visible);
 
-void gtk_date_entry_set_separator (GtkDateEntry *date,
-                                   const gchar separator);
+gboolean gtk_date_entry_set_separator (GtkDateEntry *date,
+                                   const gchar *separator);
 gboolean gtk_date_entry_set_format (GtkDateEntry *date,
                                     const gchar *format);
 
 const gchar *gtk_date_entry_get_text (GtkDateEntry *date);
 const gchar *gtk_date_entry_get_strf (GtkDateEntry *date,
                                       const gchar *format,
-                                      gchar separator);
+                                      const gchar *separator);
 
 struct tm *gtk_date_entry_get_tm (GtkDateEntry *date);
 GDate *gtk_date_entry_get_gdate (GtkDateEntry *date);
@@ -75,7 +75,7 @@ GDate *gtk_date_entry_get_gdate (GtkDateEntry *date);
 gboolean gtk_date_entry_set_date_strf (GtkDateEntry *date,
                                        const gchar *str,
                                        const gchar *format,
-                                       const gchar separator);
+                                       const gchar *separator);
 
 void gtk_date_entry_set_date_tm (GtkDateEntry *date,
                                  const struct tm tmdate);
