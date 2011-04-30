@@ -4,11 +4,14 @@
 	<glade-widget-classes>
 		<glade-widget-class name="GtkDateEntry" generic-name="gtkdateentry" title="Date Entry">
 			<properties>
-				<property name="Editable with calendar" id="editable_with_calendar" />
+				<property name="Separator" id="separator" />
+				<property name="Format" id="format" />
+				<property name="Editable only from calendar" id="editable-from-calendar" />
+				<property name="Calendar's button visible" id="calendar-button-visible" />
 			</properties>
 		</glade-widget-class>
 	</glade-widget-classes>
-  
+
 	<glade-widget-group name="gtk-control-display" title="Control and Display">
 		<glade-widget-class-ref name="GtkDateEntry" />
 	</glade-widget-group>

@@ -90,12 +90,12 @@ on_tbtnEditableWithCalendar_toggled (GtkToggleButton *togglebutton,
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tbtnEditableWithCalendar)))
 		{
 			gtk_date_entry_set_editable_with_calendar (GTK_DATE_ENTRY (date), TRUE);
-			gtk_button_set_label (GTK_BUTTON (tbtnEditableWithCalendar), "Editable only with calendar");
+			gtk_button_set_label (GTK_BUTTON (tbtnEditableWithCalendar), "Editable only from calendar");
 		}
 	else
 		{
 			gtk_date_entry_set_editable_with_calendar (GTK_DATE_ENTRY (date), FALSE);
-			gtk_button_set_label (GTK_BUTTON (tbtnEditableWithCalendar), "Editable also with calendar");
+			gtk_button_set_label (GTK_BUTTON (tbtnEditableWithCalendar), "Editable also from calendar");
 		}
 }
 
@@ -197,7 +197,7 @@ main (int argc, char **argv)
 	g_signal_connect (G_OBJECT (tbtnEditable), "toggled",
 	                  G_CALLBACK (on_tbtnEditable_toggled), NULL);
 
-	tbtnEditableWithCalendar = gtk_toggle_button_new_with_label ("Editable also with calendar");
+	tbtnEditableWithCalendar = gtk_toggle_button_new_with_label ("Editable also from calendar");
 	gtk_table_attach (GTK_TABLE (table), tbtnEditableWithCalendar, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 	gtk_widget_show (tbtnEditableWithCalendar);
 

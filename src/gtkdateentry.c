@@ -33,7 +33,10 @@
 enum
 {
 	PROP_0,
-	PROP_EDITABLE_WITH_CALENDAR
+	PROP_SEPARATOR,
+	PROP_FORMAT,
+	PROP_EDITABLE_WITH_CALENDAR,
+	PROP_CALENDAR_BUTTON_VISIBLE
 };
 
 static void gtk_date_entry_class_init (GtkDateEntryClass *klass);
@@ -115,12 +118,33 @@ gtk_date_entry_class_init (GtkDateEntryClass *klass)
 	widget_class->size_request = gtk_date_entry_size_request;
 	widget_class->size_allocate = gtk_date_entry_size_allocate;
 
+	g_object_class_install_property (object_class, PROP_SEPARATOR,
+	                                 g_param_spec_string ("separator",
+	                                                      "The separator",
+	                                                      "The separator between day, month and year",
+	                                                      "",
+	                                                      G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class, PROP_FORMAT,
+	                                 g_param_spec_string ("format",
+	                                                      "The date's format",
+	                                                      "The date's format",
+	                                                      "",
+	                                                      G_PARAM_READWRITE));
+
 	g_object_class_install_property (object_class, PROP_EDITABLE_WITH_CALENDAR,
-	                                 g_param_spec_boolean ("editable-with-calendar",
+	                                 g_param_spec_boolean ("editable-from-calendar",
 	                                                       "TRUE if it is editable only from calendar",
 	                                                       "Determines if the user can edit the text"
 	                                                       " in the #GtkDateEntry widget only from the calendar or not",
 	                                                       FALSE,
+	                                                       G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class, PROP_CALENDAR_BUTTON_VISIBLE,
+	                                 g_param_spec_boolean ("calendar-button-visible",
+	                                                       "TRUE to show the calendar's button",
+	                                                       "Determines if the calendar's button is visible or not",
+	                                                       TRUE,
 	                                                       G_PARAM_READWRITE));
 }
 
@@ -937,8 +961,20 @@ gtk_date_entry_set_property (GObject *object, guint property_id, const GValue *v
 
 	switch (property_id)
 		{
+			case PROP_SEPARATOR:
+				gtk_date_entry_set_separator (date_entry, g_value_get_string (value));
+				break;
+
+			case PROP_FORMAT:
+				gtk_date_entry_set_format (date_entry, g_value_get_string (value));
+				break;
+
 			case PROP_EDITABLE_WITH_CALENDAR:
 				gtk_date_entry_set_editable_with_calendar (date_entry, g_value_get_boolean (value));
+				break;
+
+			case PROP_CALENDAR_BUTTON_VISIBLE:
+				gtk_date_entry_set_calendar_button_visible (date_entry, g_value_get_boolean (value));
 				break;
 
 			default:
@@ -956,8 +992,20 @@ gtk_date_entry_get_property (GObject *object, guint property_id, GValue *value, 
 
 	switch (property_id)
 		{
+			case PROP_SEPARATOR:
+				g_value_set_string (value, priv->separator);
+				break;
+
+			case PROP_FORMAT:
+				g_value_set_string (value, priv->format);
+				break;
+
 			case PROP_EDITABLE_WITH_CALENDAR:
 				g_value_set_boolean (value, priv->editable_with_calendar);
+				break;
+
+			case PROP_CALENDAR_BUTTON_VISIBLE:
+				g_value_set_boolean (value, gtk_widget_get_visible (priv->btnCalendar));
 				break;
 
 			default:
