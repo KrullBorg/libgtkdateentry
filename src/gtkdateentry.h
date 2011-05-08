@@ -74,8 +74,7 @@ GDate *gtk_date_entry_get_gdate (GtkDateEntry *date);
 
 gboolean gtk_date_entry_set_date_strf (GtkDateEntry *date,
                                        const gchar *str,
-                                       const gchar *format,
-                                       const gchar *separator);
+                                       const gchar *format);
 
 void gtk_date_entry_set_date_tm (GtkDateEntry *date,
                                  const struct tm tmdate);

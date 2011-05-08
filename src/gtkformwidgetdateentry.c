@@ -93,7 +93,7 @@ gchar
 
 	GtkWidget *w = gtk_form_widget_get_widget (fwidget);
 
-	return g_strdup (gtk_date_entry_get_strf (GTK_DATE_ENTRY (w), "Ymd", '-'));
+	return g_strdup (gtk_date_entry_get_strf (GTK_DATE_ENTRY (w), "Ymd", "-"));
 }
 
 /**

@@ -64,7 +64,7 @@ on_btnSetStrf_clicked (GtkButton *button,
 {
 	gtk_date_entry_set_date_strf (GTK_DATE_ENTRY (date),
 	                              (const gchar *)gtk_entry_get_text (GTK_ENTRY (txtSetStrf)),
-                                NULL, 0);
+	                              NULL);
 }
 
 static void

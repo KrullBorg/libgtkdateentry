@@ -560,11 +560,9 @@ GDate
 gboolean
 gtk_date_entry_set_date_strf (GtkDateEntry *date,
                               const gchar *str,
-                              const gchar *format,
-                              const gchar *separator)
+                              const gchar *format)
 {
 	gchar *fmt;
-	gchar *sep;
 	GDateDay day;
 	GDateMonth month;
 	GDateYear year;
@@ -581,33 +579,25 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 		{
 			fmt = g_strdup (format);
 		}
-	if (separator == NULL)
-		{
-			sep = priv->separator;
-		}
-	else
-		{
-			sep = (gchar *)separator;
-		}
 
 	for (i = 0; i < 3; i++)
 		{
 			switch (fmt[i])
 				{
 					case 'd':
-						if (!g_date_valid_day ((GDateDay)atol (g_strndup (str + pos, 2)))) return FALSE;
+						if (!g_date_valid_day ((GDateDay)strtol (g_strndup (str + pos, 2), NULL, 10))) return FALSE;
 						day = (GDateDay)strtol (g_strndup (str + pos, 2), NULL, 10);
 						pos += 3;
 						break;
 
 					case 'm':
-						if (!g_date_valid_month ((GDateMonth)atol (g_strndup (str + pos, 2)))) return FALSE;
+						if (!g_date_valid_month ((GDateMonth)strtol (g_strndup (str + pos, 2), NULL, 10))) return FALSE;
 						month = (GDateMonth)strtol (g_strndup (str + pos, 2), NULL, 10);
 						pos += 3;
 						break;
 
 					case 'Y':
-						if (!g_date_valid_year ((GDateYear)atol (g_strndup (str + pos, 4)))) return FALSE;
+						if (!g_date_valid_year ((GDateYear)strtol (g_strndup (str + pos, 4), NULL, 10))) return FALSE;
 						year = (GDateYear)strtol (g_strndup (str + pos, 4), NULL, 10);
 						pos += 5;
 						break;
@@ -645,35 +635,37 @@ void
 gtk_date_entry_set_date_gdate (GtkDateEntry *date, const GDate *gdate)
 {
 	gint i;
-	gchar *txt = "";
+	gchar *txt;
 
 	if (gdate == NULL || !g_date_valid (gdate)) return;
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
+	txt = g_strdup ("");
 	for (i = 0; i < 3; i++)
 		{
 			switch (priv->format[i])
 				{
 					case 'd':
-						txt = g_strjoin (NULL, txt, g_strdup_printf ("%02d", g_date_get_day (gdate)), NULL);
+						txt = g_strconcat (txt, g_strdup_printf ("%02d", g_date_get_day (gdate)), NULL);
 						break;
 
 					case 'm':
-						txt = g_strjoin (NULL, txt, g_strdup_printf ("%02d", g_date_get_month (gdate)), NULL);
+						txt = g_strconcat (txt, g_strdup_printf ("%02d", g_date_get_month (gdate)), NULL);
 						break;
 
 					case 'Y':
-						txt = g_strjoin (NULL, txt, g_strdup_printf ("%04d", g_date_get_year (gdate)), NULL);
+						txt = g_strconcat (txt, g_strdup_printf ("%04d", g_date_get_year (gdate)), NULL);
 						break;
 				}
 
 			if (i < 2)
 				{
-					txt = g_strjoin (NULL, txt, g_strdup_printf ("%s", priv->separator), NULL);
+					txt = g_strconcat (txt, priv->separator, NULL);
 				}
 		}
 
+	gtk_editable_set_position (GTK_EDITABLE (priv->day), 0);
 	gtk_entry_set_text (GTK_ENTRY (priv->day), txt);
 }
 
