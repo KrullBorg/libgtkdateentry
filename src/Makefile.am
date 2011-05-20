@@ -16,6 +16,14 @@ GTKFORM_H =
 libgtkformmodulesdir =
 endif
 
+if PLATFORM_WIN32
+libmodulesext = -0.dll
+libmodulesdir = $(bindir)
+else
+libmodulesext = .so
+libmodulesdir = $(libdir)
+endif
+
 lib_LTLIBRARIES = libgtkdateentry.la
 
 libgtkdateentry_la_SOURCES = gtkdateentry.c \
@@ -26,13 +34,13 @@ libgtkdateentry_la_LDFLAGS = -no-undefined
 include_HEADERS = gtkdateentry.h \
                   $(GTKFORM_H)
 
+if LIBGTKFORM_FOUND
 install-exec-hook:
-	if test "x$(LIBGTKFORM_FOUND)" = "xyes"; then \
-		cd $(libgtkformmodulesdir) && \
-		ln -s -f $(libdir)/libgtkdateentry.so .; \
-	fi
+	cd $(libgtkformmodulesdir) && \
+		ln -s -f $(libmodulesdir)/libgtkdateentry$(libmodulesext) .
+endif
 
+if LIBGTKFORM_FOUND
 uninstall-hook:
-	if test "x$(LIBGTKFORM_FOUND)" = "xyes"; then \
-		rm -f $(libgtkformmodulesdir)/libgtkdateentry.so
-	fi
+	rm -f $(libgtkformmodulesdir)/libgtkdateentry$(libmodulesext)
+endif

@@ -1,6 +1,6 @@
 /*
  * GtkDateEntry widget test - plugin for libgtkform
- * Copyright (C) 2010 Andrea Zagli <azagli@libero.it>
+ * Copyright (C) 2010-2011 Andrea Zagli <azagli@libero.it>
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,6 +54,13 @@ main (int argc, char **argv)
 	GError *error;
 
 	gtk_init (&argc, &argv);
+
+#ifdef G_OS_WIN32
+	gchar *libname = "libgtkmaskedentry-0.dll";
+	g_module_open (g_build_filename (g_getenv ("LIBGTKFORM_MODULESDIR"), libname, NULL), G_MODULE_BIND_LAZY);
+	libname = g_strdup ("libgtkdateentry-0.dll");
+	g_module_open (g_build_filename (g_getenv ("LIBGTKFORM_MODULESDIR"), libname, NULL), G_MODULE_BIND_LAZY);
+#endif
 
 	error = NULL;
 	builder = gtk_builder_new ();

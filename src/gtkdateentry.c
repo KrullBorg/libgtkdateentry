@@ -19,12 +19,21 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+	#include <config.h>
+#endif
+
 #include <string.h>
-#include <langinfo.h>
 
 #include <gdk/gdkkeysyms.h>
-
 #include <gtk/gtk.h>
+
+#ifdef G_OS_WIN32
+#include <windows.h>
+#include <winnls.h>
+#else
+#include <langinfo.h>
+#endif
 
 #include <gtkmaskedentry.h>
 
@@ -155,9 +164,6 @@ gtk_date_entry_init (GtkDateEntry *date)
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
-	/* TO DO
-	 * read separator and format from locale settings
-	 */
 	priv->separator = gtk_date_entry_get_separator_from_locale ();
 	priv->format = gtk_date_entry_get_format_from_locale ();
 
@@ -1083,7 +1089,23 @@ static gchar
 
 	fmt = NULL;
 
+#ifdef G_OS_WIN32
+
+	gchar lpLCData[30];
+
+	if (GetLocaleInfo (LOCALE_USER_DEFAULT, LOCALE_SSHORTDATE, (LPTSTR)&lpLCData, 30) == 0)
+		{
+			g_warning ("Unable to get locale information");
+			return NULL;
+		}
+	lfmt = g_strdup ((const gchar *)&lpLCData);
+
+#else
+
 	lfmt = nl_langinfo (D_FMT);
+
+#endif
+
 	l = strlen (lfmt);
 	for (i = 0; i < l; i++)
 		{
@@ -1117,23 +1139,41 @@ static gchar
 
 	fmt = NULL;
 
+#ifdef G_OS_WIN32
+
+	gchar lpLCData[30];
+
+	if (GetLocaleInfo (LOCALE_USER_DEFAULT, LOCALE_SSHORTDATE, (LPTSTR)&lpLCData, 30) == 0)
+		{
+			g_warning ("Unable to get locale information");
+			return NULL;
+		}
+	lfmt = g_strdup ((const gchar *)&lpLCData);
+
+#else
+
 	lfmt = nl_langinfo (D_FMT);
+
+#endif
+
 	l = strlen (lfmt);
 	for (i = 0; i < l; i++)
 		{
 			switch (lfmt[i])
 				{
 					case 'd':
-						fmt = g_strconcat (fmt == NULL ? "" : fmt, "d", NULL);
+					case 'D':
+						fmt = g_strconcat (fmt == NULL ? "" : fmt, fmt != NULL && strchr (fmt, 'd') != 0 ? "" : "d", NULL);
 						break;
 
 					case 'm':
-						fmt = g_strconcat (fmt == NULL ? "" : fmt, "m", NULL);
+					case 'M':
+						fmt = g_strconcat (fmt == NULL ? "" : fmt, fmt != NULL && strchr (fmt, 'm') != 0 ? "" : "m", NULL);
 						break;
 
 					case 'y':
 					case 'Y':
-						fmt = g_strconcat (fmt == NULL ? "" : fmt, "Y", NULL);
+						fmt = g_strconcat (fmt == NULL ? "" : fmt, fmt != NULL && strchr (fmt, 'Y') != 0 ? "" : "Y", NULL);
 						break;
 				}
 		}

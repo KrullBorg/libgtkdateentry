@@ -30,11 +30,11 @@ AC_STRUCT_TM
 GTK_DOC_CHECK(1.0)
 
 PKG_CHECK_MODULES(GTKDATEENTRY, [gtk+-2.0 >= 2.6.8
-                                 libgtkmaskedentry >= 0.0.1])
+                                 libgtkmaskedentry >= 0.0.3])
 PKG_CHECK_EXISTS(gladeui-1.0 >= 3.2.0, [GLADEUI_FOUND=yes], [GLADEUI_FOUND=no])
 PKG_CHECK_EXISTS(libgtkform >= 0.2.0, [LIBGTKFORM_FOUND=yes], [LIBGTKFORM_FOUND=no])
 
-AM_CONDITIONAL(GLADEUI, test $GLADEUI_FOUND = yes)
+AM_CONDITIONAL(GLADEUI_FOUND, test $GLADEUI_FOUND = yes)
 AM_CONDITIONAL(LIBGTKFORM_FOUND, test $LIBGTKFORM_FOUND = yes)
 
 AC_SUBST(GTKDATEENTRY_CFLAGS)
@@ -45,8 +45,21 @@ PKG_CHECK_MODULES(GTKFORM, libgtkform >= 0.2.0)
 
 AC_SUBST(GTKFORM_CFLAGS)
 AC_SUBST(GTKFORM_LIBS)
-AC_SUBST(LIBGTKFORM_FOUND)
 fi
+
+dnl ******************************
+dnl Check for Operating System
+dnl ******************************
+
+platform_win32=no
+
+case "$host" in
+*-mingw*)
+    platform_win32=yes
+    ;;
+esac
+
+AM_CONDITIONAL(PLATFORM_WIN32, [test $platform_win32 = yes])
 
 # Output files
 AC_CONFIG_FILES([
