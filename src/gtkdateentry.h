@@ -69,7 +69,8 @@ gboolean gtk_date_entry_set_format (GtkDateEntry *date,
 const gchar *gtk_date_entry_get_text (GtkDateEntry *date);
 const gchar *gtk_date_entry_get_strf (GtkDateEntry *date,
                                       const gchar *format,
-                                      const gchar *separator);
+                                      const gchar *separator,
+                                      const gchar *time_separator);
 
 struct tm *gtk_date_entry_get_tm (GtkDateEntry *date);
 GDate *gtk_date_entry_get_gdate (GtkDateEntry *date);

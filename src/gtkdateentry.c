@@ -461,9 +461,11 @@ const gchar
 	if (gtk_widget_get_visible (priv->spnHours))
 		{
 			ret = g_strconcat (ret,
-			                   g_strdup_printf (" %02d:%02d:%02d",
+			                   g_strdup_printf (" %02d%s%02d%s%02d",
 			                                    gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnHours)),
+			                                    priv->time_separator,
 			                                    gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnMinutes)),
+			                                    priv->time_separator,
 			                                    gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnSeconds))),
 			                   NULL);
 		}
@@ -483,18 +485,32 @@ const gchar
 const gchar
 *gtk_date_entry_get_strf (GtkDateEntry *date,
                           const gchar *format,
-                          const gchar *separator)
+                          const gchar *separator,
+                          const gchar *time_separator)
 {
-	gchar *fmt, *sep, *ret = "";
-	gint i;
-	GDate *gdate = (GDate *)gtk_date_entry_get_gdate (date);
+	gchar *fmt;
+	gchar *sep;
+	gchar *tsep;
+
+	gchar *str_date;
+	gchar *str_time;
+
+	guint l;
+	guint i;
+
+	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), "");
+
+	struct tm *tm_date = gtk_date_entry_get_tm (date);
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
-	if (gdate == NULL)
+	if (tm_date == NULL)
 		{
 			return "";
 		}
+
+	str_date = g_strdup ("");
+	str_time = g_strdup ("");
 
 	if (format == NULL)
 		{
@@ -504,6 +520,7 @@ const gchar
 		{
 			fmt = g_strdup (format);
 		}
+
 	if (separator == NULL)
 		{
 			sep = priv->separator;
@@ -513,30 +530,71 @@ const gchar
 			sep = (gchar *)separator;
 		}
 
-	for (i = 0; i < 3; i++)
+	if (time_separator == NULL)
+		{
+			tsep = priv->time_separator;
+		}
+	else
+		{
+			tsep = (gchar *)time_separator;
+		}
+
+	l = strlen (fmt);
+	for (i = 0; i < l; i++)
 		{
 			switch (fmt[i])
 				{
 					case 'd':
-						ret = g_strjoin (NULL, ret, g_strdup_printf ("%02d", (int)g_date_get_day (gdate)), NULL);
+						if (strlen (str_date) > 0)
+							{
+								str_date = g_strconcat (str_date, sep, NULL);
+							}
+						str_date = g_strconcat (str_date, g_strdup_printf ("%02d", tm_date->tm_mday, NULL));
 						break;
 
 					case 'm':
-						ret = g_strjoin (NULL, ret, g_strdup_printf ("%02d", (int)g_date_get_month (gdate)), NULL);
+						if (strlen (str_date) > 0)
+							{
+								str_date = g_strconcat (str_date, sep, NULL);
+							}
+						str_date = g_strconcat (str_date, g_strdup_printf ("%02d", tm_date->tm_mon + 1, NULL));
 						break;
 
 					case 'Y':
-						ret = g_strjoin (NULL, ret, g_strdup_printf ("%04d", (int)g_date_get_year (gdate)), NULL);
+						if (strlen (str_date) > 0)
+							{
+								str_date = g_strconcat (str_date, sep, NULL);
+							}
+						str_date = g_strconcat (str_date, g_strdup_printf ("%04d", tm_date->tm_year + 1900, NULL));
 						break;
-				}
 
-			if (i < 2)
-				{
-					ret = g_strjoin (NULL, ret, g_strdup_printf ("%s", sep), NULL);
+					case 'H':
+						if (strlen (str_time) > 0)
+							{
+								str_time = g_strconcat (str_time, tsep, NULL);
+							}
+						str_time = g_strconcat (str_time, g_strdup_printf ("%02d", tm_date->tm_hour, NULL));
+						break;
+
+					case 'M':
+						if (strlen (str_time) > 0)
+							{
+								str_time = g_strconcat (str_time, tsep, NULL);
+							}
+						str_time = g_strconcat (str_time, g_strdup_printf ("%02d", tm_date->tm_min, NULL));
+						break;
+
+					case 'S':
+						if (strlen (str_time) > 0)
+							{
+								str_time = g_strconcat (str_time, tsep, NULL);
+							}
+						str_time = g_strconcat (str_time, g_strdup_printf ("%02d", tm_date->tm_sec, NULL));
+						break;
 				}
 		}
 
-	return (const gchar *)ret;
+	return (const gchar *)g_strstrip (g_strdup_printf ("%s %s", str_date, str_time));
 }
 
 /**

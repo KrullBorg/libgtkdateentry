@@ -38,6 +38,9 @@ GtkWidget *txtSetStrf;
 GtkWidget *txtSetStrfFormat;
 GtkWidget *txtSetStrfSep;
 GtkWidget *btnSetStrf;
+GtkWidget *txtGetStrfFormat;
+GtkWidget *txtGetStrf;
+GtkWidget *btnGetStrf;
 GtkWidget *txtGetText;
 GtkWidget *btnGetText;
 
@@ -80,6 +83,17 @@ on_btnSetStrf_clicked (GtkButton *button,
 	gtk_date_entry_set_date_strf (GTK_DATE_ENTRY (date),
 	                              (const gchar *)gtk_entry_get_text (GTK_ENTRY (txtSetStrf)),
 	                              NULL);
+}
+
+static void
+on_btnGetStrf_clicked (GtkButton *button,
+                       gpointer user_data)
+{
+	gtk_entry_set_text (GTK_ENTRY (txtGetStrf),
+	                    gtk_date_entry_get_strf (GTK_DATE_ENTRY (date),
+	                              (const gchar *)gtk_entry_get_text (GTK_ENTRY (txtGetStrfFormat)),
+	                              NULL,
+	                              NULL));
 }
 
 static void
@@ -152,7 +166,7 @@ main (int argc, char **argv)
 	gtk_window_set_title (GTK_WINDOW (window), "GtkDateEntry Test");
 
 	g_signal_connect (G_OBJECT (window), "destroy",
-		        G_CALLBACK (gtk_main_quit), NULL);
+	                  G_CALLBACK (gtk_main_quit), NULL);
 
 	table = gtk_table_new (5, 3, FALSE);
 	gtk_container_add (GTK_CONTAINER (window), table);
@@ -250,6 +264,30 @@ main (int argc, char **argv)
 
 	g_signal_connect (G_OBJECT (btnSetStrf), "clicked",
 	                  G_CALLBACK (on_btnSetStrf_clicked), NULL);
+
+	x = 0;
+	y++;
+	label = gtk_label_new ("Get strf");
+	gtk_table_attach (GTK_TABLE (table), label, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_widget_show (label);
+
+	x++;
+	txtGetStrfFormat = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (table), txtGetStrfFormat, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_widget_show (txtGetStrfFormat);
+
+	x++;
+	txtGetStrf = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (table), txtGetStrf, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_widget_show (txtGetStrf);
+
+	x++;
+	btnGetStrf = gtk_button_new_with_label ("get_strf");
+	gtk_table_attach (GTK_TABLE (table), btnGetStrf, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_widget_show (btnGetStrf);
+
+	g_signal_connect (G_OBJECT (btnGetStrf), "clicked",
+	                  G_CALLBACK (on_btnGetStrf_clicked), NULL);
 
 	x = 0;
 	y++;
