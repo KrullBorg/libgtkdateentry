@@ -46,7 +46,9 @@ enum
 	PROP_TIME_SEPARATOR,
 	PROP_FORMAT,
 	PROP_EDITABLE_WITH_CALENDAR,
-	PROP_CALENDAR_BUTTON_VISIBLE
+	PROP_CALENDAR_BUTTON_VISIBLE,
+	PROP_TIME_VISIBLE,
+	PROP_TIME_WITH_SECONDS
 };
 
 static void gtk_date_entry_class_init (GtkDateEntryClass *klass);
@@ -171,6 +173,20 @@ gtk_date_entry_class_init (GtkDateEntryClass *klass)
 	                                 g_param_spec_boolean ("calendar-button-visible",
 	                                                       "TRUE to show the calendar's button",
 	                                                       "Determines if the calendar's button is visible or not.",
+	                                                       TRUE,
+	                                                       G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class, PROP_TIME_VISIBLE,
+	                                 g_param_spec_boolean ("time-visible",
+	                                                       "TRUE to show the time part",
+	                                                       "Determines if the time part of the widget is visible or not.",
+	                                                       TRUE,
+	                                                       G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class, PROP_TIME_WITH_SECONDS,
+	                                 g_param_spec_boolean ("time-with-seconds",
+	                                                       "TRUE to show the seconds in time part",
+	                                                       "Determines if the seconds in the time part of the widget are visible or not.",
 	                                                       TRUE,
 	                                                       G_PARAM_READWRITE));
 }
@@ -1264,7 +1280,6 @@ static void
 gtk_date_entry_set_property (GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
 {
 	GtkDateEntry *date_entry = GTK_DATE_ENTRY (object);
-
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date_entry);
 
 	switch (property_id)
@@ -1289,6 +1304,15 @@ gtk_date_entry_set_property (GObject *object, guint property_id, const GValue *v
 				gtk_date_entry_set_calendar_button_visible (date_entry, g_value_get_boolean (value));
 				break;
 
+			case PROP_TIME_VISIBLE:
+				gtk_date_entry_set_time_visible (date_entry, g_value_get_boolean (value));
+				break;
+
+			case PROP_TIME_WITH_SECONDS:
+				priv->time_with_seconds = g_value_get_boolean (value);
+				gtk_date_entry_set_time_visible (date_entry, priv->time_is_visible);
+				break;
+
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 				break;
@@ -1299,7 +1323,6 @@ static void
 gtk_date_entry_get_property (GObject *object, guint property_id, GValue *value, GParamSpec *pspec)
 {
 	GtkDateEntry *date_entry = GTK_DATE_ENTRY (object);
-
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date_entry);
 
 	switch (property_id)
@@ -1322,6 +1345,14 @@ gtk_date_entry_get_property (GObject *object, guint property_id, GValue *value, 
 
 			case PROP_CALENDAR_BUTTON_VISIBLE:
 				g_value_set_boolean (value, gtk_widget_get_visible (priv->btnCalendar));
+				break;
+
+			case PROP_TIME_VISIBLE:
+				g_value_set_boolean (value, priv->time_is_visible);
+				break;
+
+			case PROP_TIME_WITH_SECONDS:
+				g_value_set_boolean (value, priv->time_with_seconds);
 				break;
 
 			default:
