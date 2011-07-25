@@ -3,7 +3,9 @@ AC_INIT([GtkDateEntry], [0.0.4], [azagli@libero.it])
 AC_CONFIG_SRCDIR([src/gtkdateentry.c])
 AC_CONFIG_HEADER([config.h])
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(-Wall)
+
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AM_MAINTAINER_MODE
 

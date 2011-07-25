@@ -189,6 +189,7 @@ gtk_date_entry_init (GtkDateEntry *date)
 
 	priv->day = gtk_masked_entry_new ();
 	gtk_date_entry_change_mask (date);
+	gtk_entry_set_width_chars (GTK_ENTRY (priv->day), 10);
 	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->day, TRUE, TRUE, 0);
 	gtk_widget_show (priv->day);
 
@@ -228,10 +229,13 @@ gtk_date_entry_init (GtkDateEntry *date)
 	                  G_CALLBACK (calendar_on_day_selected_double_click), (gpointer)date);
 
 	priv->spnHours = gtk_spin_button_new_with_range (0, 23, 1);
+	gtk_entry_set_width_chars (GTK_ENTRY (priv->spnHours), 2);
 	priv->lblMinutes = gtk_label_new (":");
 	priv->spnMinutes = gtk_spin_button_new_with_range (0, 59, 1);
+	gtk_entry_set_width_chars (GTK_ENTRY (priv->spnMinutes), 2);
 	priv->lblSeconds = gtk_label_new (":");
 	priv->spnSeconds = gtk_spin_button_new_with_range (0, 59, 1);
+	gtk_entry_set_width_chars (GTK_ENTRY (priv->spnSeconds), 2);
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (priv->spnHours), 0);
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (priv->spnMinutes), 0);
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (priv->spnSeconds), 0);
