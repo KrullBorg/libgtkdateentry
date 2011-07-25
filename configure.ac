@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT([GtkDateEntry], [0.0.3], [azagli@libero.it])
+AC_INIT([GtkDateEntry], [0.0.4], [azagli@libero.it])
 AC_CONFIG_SRCDIR([src/gtkdateentry.c])
 AC_CONFIG_HEADER([config.h])
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Andrea Zagli <azagli@libero.it>
+ * Copyright (C) 2010-2011 Andrea Zagli <azagli@libero.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -93,7 +93,7 @@ gchar
 
 	GtkWidget *w = gtk_form_widget_get_widget (fwidget);
 
-	return g_strdup (gtk_date_entry_get_strf (GTK_DATE_ENTRY (w), "Ymd", "-"));
+	return g_strdup (gtk_date_entry_get_strf (GTK_DATE_ENTRY (w), "Ymd HMS", "-", ":"));
 }
 
 /**
@@ -153,7 +153,7 @@ gtk_form_widget_date_entry_set_property (GObject *object,
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 				break;
-	  }
+		}
 }
 
 static void
@@ -171,5 +171,5 @@ gtk_form_widget_date_entry_get_property (GObject *object,
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 				break;
-	  }
+		}
 }

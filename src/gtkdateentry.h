@@ -61,13 +61,16 @@ GtkWidget *gtk_date_entry_new (const gchar *format,
 
 gboolean gtk_date_entry_set_separator (GtkDateEntry *date,
                                    const gchar *separator);
+gboolean gtk_date_entry_set_time_separator (GtkDateEntry *date,
+                                   const gchar *separator);
 gboolean gtk_date_entry_set_format (GtkDateEntry *date,
                                     const gchar *format);
 
 const gchar *gtk_date_entry_get_text (GtkDateEntry *date);
 const gchar *gtk_date_entry_get_strf (GtkDateEntry *date,
                                       const gchar *format,
-                                      const gchar *separator);
+                                      const gchar *separator,
+                                      const gchar *time_separator);
 
 struct tm *gtk_date_entry_get_tm (GtkDateEntry *date);
 GDate *gtk_date_entry_get_gdate (GtkDateEntry *date);
@@ -90,6 +93,9 @@ void gtk_date_entry_set_editable_with_calendar (GtkDateEntry *date,
 
 void gtk_date_entry_set_calendar_button_visible (GtkDateEntry *date,
                                                  gboolean is_visible);
+
+void gtk_date_entry_set_time_visible (GtkDateEntry *date,
+                                      gboolean is_visible);
 
 
 G_END_DECLS
