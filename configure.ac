@@ -31,7 +31,8 @@ AC_STRUCT_TM
 
 GTK_DOC_CHECK(1.0)
 
-PKG_CHECK_MODULES(GTKDATEENTRY, [gtk+-2.0 >= 2.6.8
+PKG_CHECK_MODULES(GTKDATEENTRY, [glib-2.0 >= 2.26
+                                 gtk+-2.0 >= 2.6.8
                                  libgtkmaskedentry >= 0.0.3])
 PKG_CHECK_EXISTS(gladeui-1.0 >= 3.2.0, [GLADEUI_FOUND=yes], [GLADEUI_FOUND=no])
 PKG_CHECK_EXISTS(libgtkform >= 0.2.0, [LIBGTKFORM_FOUND=yes], [LIBGTKFORM_FOUND=no])

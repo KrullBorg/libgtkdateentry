@@ -74,6 +74,7 @@ const gchar *gtk_date_entry_get_strf (GtkDateEntry *date,
 
 struct tm *gtk_date_entry_get_tm (GtkDateEntry *date);
 GDate *gtk_date_entry_get_gdate (GtkDateEntry *date);
+GDateTime *gtk_date_entry_get_gdatetime (GtkDateEntry *date);
 
 gboolean gtk_date_entry_set_date_strf (GtkDateEntry *date,
                                        const gchar *str,
@@ -83,6 +84,8 @@ void gtk_date_entry_set_date_tm (GtkDateEntry *date,
                                  const struct tm tmdate);
 void gtk_date_entry_set_date_gdate (GtkDateEntry *date,
                                     const GDate *gdate);
+void gtk_date_entry_set_date_gdatetime (GtkDateEntry *date,
+                                        const GDateTime *gdatetime);
 
 gboolean gtk_date_entry_is_valid (GtkDateEntry *date);
 

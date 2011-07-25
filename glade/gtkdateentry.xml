@@ -5,6 +5,7 @@
 		<glade-widget-class name="GtkDateEntry" generic-name="gtkdateentry" title="Date Entry">
 			<properties>
 				<property name="Separator" id="separator" />
+				<property name="Time separator" id="time-separator" />
 				<property name="Format" id="format" />
 				<property name="Editable only from calendar" id="editable-from-calendar" />
 				<property name="Calendar's button visible" id="calendar-button-visible" />

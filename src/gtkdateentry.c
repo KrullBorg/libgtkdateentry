@@ -113,6 +113,9 @@ struct _GtkDateEntryPrivate
 		gchar *time_separator;
 		gchar *format;
 		gboolean editable_with_calendar;
+
+		gboolean time_is_visible;
+		gboolean time_with_seconds;
 	};
 
 G_DEFINE_TYPE (GtkDateEntry, gtk_date_entry, GTK_TYPE_BIN)
@@ -227,6 +230,9 @@ gtk_date_entry_init (GtkDateEntry *date)
 	                  G_CALLBACK (calendar_on_day_selected), (gpointer)date);
 	g_signal_connect (G_OBJECT (priv->calendar), "day-selected-double-click",
 	                  G_CALLBACK (calendar_on_day_selected_double_click), (gpointer)date);
+
+	priv->time_is_visible = TRUE;
+	priv->time_with_seconds = TRUE;
 
 	priv->spnHours = gtk_spin_button_new_with_range (0, 23, 1);
 	gtk_entry_set_width_chars (GTK_ENTRY (priv->spnHours), 2);
@@ -352,8 +358,6 @@ gtk_date_entry_set_time_separator (GtkDateEntry *date, const gchar *separator)
 	gchar *_separator;
 
 	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), FALSE);
-
-	GDate *gdate = gtk_date_entry_get_gdate (date);
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
@@ -717,6 +721,53 @@ GDate
 }
 
 /**
+ * gtk_date_entry_get_gdatetime:
+ * @date: a #GtkDateEntry object.
+ *
+ * Returns: the @date's content as a #GDateTime.
+ */
+GDateTime
+*gtk_date_entry_get_gdatetime (GtkDateEntry *date)
+{
+	GDateTime *ret;
+	GDate *gdate;
+
+	gint hour;
+	gint minute;
+	gdouble seconds;
+
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
+
+	gdate = gtk_date_entry_get_gdate (date);
+	if (gdate == NULL)
+		{
+			return NULL;
+		}
+
+	hour = 0;
+	minute = 0;
+	seconds = 0.0;
+	if (priv->time_is_visible)
+		{
+			hour = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnHours));
+			minute = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnMinutes));
+			if (priv->time_with_seconds)
+				{
+					seconds = gtk_spin_button_get_value (GTK_SPIN_BUTTON (priv->spnSeconds));
+				}
+		}
+
+	ret = g_date_time_new_local (g_date_get_year (gdate),
+	                             g_date_get_month (gdate),
+	                             g_date_get_day (gdate),
+	                             hour,
+	                             minute,
+	                             seconds);
+
+	return ret;
+}
+
+/**
  * gtk_date_entry_set_date_strf:
  * @date: a #GtkDateEntry.
  * @str: a #gchar which is the content to set.
@@ -850,6 +901,40 @@ gtk_date_entry_set_date_gdate (GtkDateEntry *date, const GDate *gdate)
 }
 
 /**
+ * gtk_date_entry_set_date_gdatetime:
+ * @date: a #GtkDateEntry.
+ * @gdatetime: a #GDateTime from which set @date's content.
+ *
+ * Sets @date's content from a @gdatetime.
+ **/
+void
+gtk_date_entry_set_date_gdatetime (GtkDateEntry *date, const GDateTime *gdatetime)
+{
+	GDate *gdate;
+
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
+
+	gdate = g_date_new_dmy (g_date_time_get_year ((GDateTime *)gdatetime),
+	                        g_date_time_get_month ((GDateTime *)gdatetime),
+	                        g_date_time_get_day_of_month ((GDateTime *)gdatetime));
+
+	gtk_date_entry_set_date_gdate (date, gdate);
+
+	if (priv->time_is_visible)
+		{
+			gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnHours),
+			                           (gdouble)g_date_time_get_hour ((GDateTime *)gdatetime));
+			gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnMinutes),
+			                           (gdouble)g_date_time_get_minute ((GDateTime *)gdatetime));
+			if (priv->time_with_seconds)
+				{
+					gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnHours),
+					                           g_date_time_get_seconds ((GDateTime *)gdatetime));
+				}
+		}
+}
+
+/**
  * gtk_date_entry_is_valid:
  * @date: a #GtkDateEntry.
  *
@@ -860,10 +945,12 @@ gtk_date_entry_set_date_gdate (GtkDateEntry *date, const GDate *gdate)
 gboolean
 gtk_date_entry_is_valid (GtkDateEntry *date)
 {
-	const GDate *gdate = gtk_date_entry_get_gdate (date);
-	if (gdate != NULL)
+	GDateTime *gdatetime;
+
+	gdatetime = gtk_date_entry_get_gdatetime (date);
+	if (gdatetime != NULL)
 		{
-			return g_date_valid (gdate);
+			return TRUE;
 		}
 	else
 		{
@@ -945,14 +1032,25 @@ gtk_date_entry_set_time_visible (GtkDateEntry *date,
 {
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
-	if (is_visible)
+	priv->time_is_visible = is_visible;
+	if (priv->time_is_visible)
 		{
 			gtk_widget_show (priv->spnHours);
 			gtk_widget_show (priv->lblMinutes);
 			gtk_widget_show (priv->spnMinutes);
-			gtk_widget_show (priv->lblSeconds);
-			gtk_widget_show (priv->spnSeconds);
-	}
+			if (priv->time_with_seconds)
+				{
+					gtk_widget_show (priv->lblSeconds);
+					gtk_widget_show (priv->spnSeconds);
+				}
+			else
+				{
+					gtk_widget_hide (priv->lblSeconds);
+					gtk_widget_hide (priv->spnSeconds);
+
+					gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnSeconds), 0.0);
+				}
+		}
 	else
 		{
 			gtk_widget_hide (priv->spnHours);
@@ -960,6 +1058,10 @@ gtk_date_entry_set_time_visible (GtkDateEntry *date,
 			gtk_widget_hide (priv->spnMinutes);
 			gtk_widget_hide (priv->lblSeconds);
 			gtk_widget_hide (priv->spnSeconds);
+
+			gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnHours), 0.0);
+			gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnMinutes), 0.0);
+			gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnSeconds), 0.0);
 		}
 }
 
