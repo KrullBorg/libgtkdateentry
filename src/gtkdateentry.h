@@ -71,6 +71,7 @@ const gchar *gtk_date_entry_get_strf (GtkDateEntry *date,
                                       const gchar *format,
                                       const gchar *separator,
                                       const gchar *time_separator);
+const gchar *gtk_date_entry_get_sql (GtkDateEntry *date);
 
 struct tm *gtk_date_entry_get_tm (GtkDateEntry *date);
 GDate *gtk_date_entry_get_gdate (GtkDateEntry *date);

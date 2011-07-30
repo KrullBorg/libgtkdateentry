@@ -43,6 +43,8 @@ GtkWidget *txtGetStrf;
 GtkWidget *btnGetStrf;
 GtkWidget *txtGetText;
 GtkWidget *btnGetText;
+GtkWidget *txtGetSql;
+GtkWidget *btnGetSql;
 
 GtkWidget *tbtnEditable;
 GtkWidget *tbtnEditableWithCalendar;
@@ -101,6 +103,13 @@ on_btnGetText_clicked (GtkButton *button,
                        gpointer user_data)
 {
 	gtk_entry_set_text (GTK_ENTRY (txtGetText), gtk_date_entry_get_text (GTK_DATE_ENTRY (date)));
+}
+
+static void
+on_btnGetSql_clicked (GtkButton *button,
+                       gpointer user_data)
+{
+	gtk_entry_set_text (GTK_ENTRY (txtGetSql), gtk_date_entry_get_sql (GTK_DATE_ENTRY (date)));
 }
 
 static void
@@ -168,7 +177,7 @@ main (int argc, char **argv)
 	g_signal_connect (G_OBJECT (window), "destroy",
 	                  G_CALLBACK (gtk_main_quit), NULL);
 
-	table = gtk_table_new (5, 3, FALSE);
+	table = gtk_table_new (6, 3, FALSE);
 	gtk_container_add (GTK_CONTAINER (window), table);
 	gtk_widget_show (table);
 
@@ -308,6 +317,26 @@ main (int argc, char **argv)
 
 	g_signal_connect (G_OBJECT (btnGetText), "clicked",
 	                  G_CALLBACK (on_btnGetText_clicked), NULL);
+
+	x = 0;
+	y++;
+	label = gtk_label_new ("Sql");
+	gtk_table_attach (GTK_TABLE (table), label, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_widget_show (label);
+
+	x++;
+	txtGetSql = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (table), txtGetSql, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_editable_set_editable (GTK_EDITABLE (txtGetSql), FALSE);
+	gtk_widget_show (txtGetSql);
+
+	x++;
+	btnGetSql = gtk_button_new_with_label ("Get sql");
+	gtk_table_attach (GTK_TABLE (table), btnGetSql, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_widget_show (btnGetSql);
+
+	g_signal_connect (G_OBJECT (btnGetSql), "clicked",
+	                  G_CALLBACK (on_btnGetSql_clicked), NULL);
 
 	x = 0;
 	y++;
