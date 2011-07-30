@@ -47,6 +47,7 @@ enum
 	PROP_FORMAT,
 	PROP_EDITABLE_WITH_CALENDAR,
 	PROP_CALENDAR_BUTTON_VISIBLE,
+	PROP_DATE_VISIBLE,
 	PROP_TIME_VISIBLE,
 	PROP_TIME_WITH_SECONDS
 };
@@ -116,6 +117,7 @@ struct _GtkDateEntryPrivate
 		gchar *format;
 		gboolean editable_with_calendar;
 
+		gboolean date_is_visible;
 		gboolean time_is_visible;
 		gboolean time_with_seconds;
 	};
@@ -173,6 +175,13 @@ gtk_date_entry_class_init (GtkDateEntryClass *klass)
 	                                 g_param_spec_boolean ("calendar-button-visible",
 	                                                       "TRUE to show the calendar's button",
 	                                                       "Determines if the calendar's button is visible or not.",
+	                                                       TRUE,
+	                                                       G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class, PROP_DATE_VISIBLE,
+	                                 g_param_spec_boolean ("date-visible",
+	                                                       "TRUE to show the date part",
+	                                                       "Determines if the date part of the widget is visible or not.",
 	                                                       TRUE,
 	                                                       G_PARAM_READWRITE));
 
@@ -247,6 +256,7 @@ gtk_date_entry_init (GtkDateEntry *date)
 	g_signal_connect (G_OBJECT (priv->calendar), "day-selected-double-click",
 	                  G_CALLBACK (calendar_on_day_selected_double_click), (gpointer)date);
 
+	priv->date_is_visible = TRUE;
 	priv->time_is_visible = TRUE;
 	priv->time_with_seconds = TRUE;
 
@@ -686,7 +696,7 @@ const gchar
 struct tm
 *gtk_date_entry_get_tm (GtkDateEntry *date)
 {
-	struct tm tm;
+	struct tm *tm;
 
 	const GDate *gdate;
 	GtkDateEntryPrivate *priv;
@@ -695,20 +705,22 @@ struct tm
 
 	priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
+	tm = g_malloc0 (sizeof (struct tm));
+
 	gdate = gtk_date_entry_get_gdate (date);
 
 	if (gdate == NULL) return NULL;
 
-	g_date_to_struct_tm (gdate, &tm);
+	g_date_to_struct_tm (gdate, tm);
 
-	if (gtk_widget_get_visible (priv->spnHours))
+	if (priv->time_is_visible)
 		{
-			tm.tm_hour = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnHours));
-			tm.tm_min = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnMinutes));
-			tm.tm_sec = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnSeconds));
+			tm->tm_hour = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnHours));
+			tm->tm_min = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnMinutes));
+			tm->tm_sec = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (priv->spnSeconds));
 		}
 
-	return (struct tm *)g_memdup ((gconstpointer)&tm, sizeof (struct tm));
+	return tm;
 }
 
 /**
@@ -1165,6 +1177,53 @@ gtk_date_entry_set_calendar_button_visible (GtkDateEntry *date,
 }
 
 /**
+ * gtk_date_entry_set_date_visible:
+ * @date: a #GtkDateEntry.
+ * @is_visible: TRUE if the date must be visible.
+ * 
+ * Determines if the date is visible or not.
+ */
+void
+gtk_date_entry_set_date_visible (GtkDateEntry *date,
+                                 gboolean is_visible)
+{
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
+
+	priv->date_is_visible = is_visible;
+
+	gtk_date_entry_set_calendar_button_visible (date, priv->date_is_visible);
+
+	if (priv->date_is_visible)
+		{
+			gtk_widget_show (priv->day);
+		}
+	else
+		{
+			gtk_widget_hide (priv->day);
+
+			gtk_date_entry_set_date_gdatetime (date, NULL);
+		}
+}
+
+/**
+ * gtk_date_entry_is_date_visible:
+ * @date: a #GtkDateEntry.
+ * 
+ * Returns: #TRUE or #FALSE if date part is visible or not.
+ */
+gboolean
+gtk_date_entry_is_date_visible (GtkDateEntry *date)
+{
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
+
+	return priv->date_is_visible;
+}
+
+/**
  * gtk_date_entry_set_time_visible:
  * @date: a #GtkDateEntry.
  * @is_visible: TRUE if the time must be visible.
@@ -1455,6 +1514,10 @@ gtk_date_entry_set_property (GObject *object, guint property_id, const GValue *v
 				gtk_date_entry_set_calendar_button_visible (date_entry, g_value_get_boolean (value));
 				break;
 
+			case PROP_DATE_VISIBLE:
+				gtk_date_entry_set_date_visible (date_entry, g_value_get_boolean (value));
+				break;
+
 			case PROP_TIME_VISIBLE:
 				gtk_date_entry_set_time_visible (date_entry, g_value_get_boolean (value));
 				break;
@@ -1496,6 +1559,10 @@ gtk_date_entry_get_property (GObject *object, guint property_id, GValue *value, 
 
 			case PROP_CALENDAR_BUTTON_VISIBLE:
 				g_value_set_boolean (value, gtk_widget_get_visible (priv->btnCalendar));
+				break;
+
+			case PROP_DATE_VISIBLE:
+				g_value_set_boolean (value, priv->date_is_visible);
 				break;
 
 			case PROP_TIME_VISIBLE:

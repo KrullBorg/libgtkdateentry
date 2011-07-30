@@ -9,6 +9,7 @@
 				<property name="Format" id="format" />
 				<property name="Editable only from calendar" id="editable-from-calendar" />
 				<property name="Calendar's button visible" id="calendar-button-visible" />
+				<property name="Date part visible" id="date-visible" />
 				<property name="Time part visible" id="time-visible" />
 				<property name="Seconds in time part visible" id="time-with-seconds" />
 			</properties>
