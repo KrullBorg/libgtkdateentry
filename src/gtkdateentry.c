@@ -262,9 +262,9 @@ gtk_date_entry_init (GtkDateEntry *date)
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (priv->spnMinutes), 0);
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (priv->spnSeconds), 0);
 	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->spnHours, TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->lblMinutes, TRUE, TRUE, 3);
+	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->lblMinutes, FALSE, FALSE, 3);
 	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->spnMinutes, TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->lblSeconds, TRUE, TRUE, 3);
+	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->lblSeconds, FALSE, FALSE, 3);
 	gtk_box_pack_start (GTK_BOX (priv->hbox), priv->spnSeconds, TRUE, TRUE, 0);
 	gtk_widget_show (priv->spnHours);
 	gtk_widget_show (priv->lblMinutes);
@@ -413,13 +413,11 @@ gtk_date_entry_set_format (GtkDateEntry *date, const gchar *format)
 	gchar *format_;
 	GDate *gdate;
 
+	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), FALSE);
+	g_return_val_if_fail (format != NULL, FALSE);
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
-	if (format == NULL)
-		{
-			return FALSE;
-		}
-	
 	format_ = g_strstrip (g_strdup (format));
 	if (strlen (format_) != 3)
 		{
@@ -671,6 +669,8 @@ GDate
 	GDateMonth gmon;
 	GDateYear gyear;
 
+	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), NULL);
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	gday = G_DATE_BAD_DAY;
@@ -752,6 +752,8 @@ GDateTime
 	gint minute;
 	gdouble seconds;
 
+	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), NULL);
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	gdate = gtk_date_entry_get_gdate (date);
@@ -806,6 +808,8 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 	GDateYear year;
 	gint i;
 	gint pos = 0;
+
+	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), FALSE);
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
@@ -884,7 +888,8 @@ gtk_date_entry_set_date_gdate (GtkDateEntry *date, const GDate *gdate)
 	gint i;
 	gchar *txt;
 
-	if (gdate == NULL || !g_date_valid (gdate)) return;
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+	g_return_if_fail (gdate != NULL && g_date_valid (gdate));
 
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
@@ -928,6 +933,8 @@ gtk_date_entry_set_date_gdatetime (GtkDateEntry *date, const GDateTime *gdatetim
 {
 	GDate *gdate;
 
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	gdate = g_date_new_dmy (g_date_time_get_year ((GDateTime *)gdatetime),
@@ -963,6 +970,8 @@ gtk_date_entry_is_valid (GtkDateEntry *date)
 {
 	GDateTime *gdatetime;
 
+	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), FALSE);
+
 	gdatetime = gtk_date_entry_get_gdatetime (date);
 	if (gdatetime != NULL)
 		{
@@ -985,6 +994,8 @@ void
 gtk_date_entry_set_editable (GtkDateEntry *date,
                              gboolean is_editable)
 {
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	gtk_editable_set_editable (GTK_EDITABLE (priv->day), is_editable);
@@ -1007,6 +1018,8 @@ void
 gtk_date_entry_set_editable_with_calendar (GtkDateEntry *date,
                                   gboolean is_editable_with_calendar)
 {
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	gtk_editable_set_editable (GTK_EDITABLE (priv->day), !is_editable_with_calendar);
@@ -1023,6 +1036,8 @@ void
 gtk_date_entry_set_calendar_button_visible (GtkDateEntry *date,
                                             gboolean is_visible)
 {
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	if (is_visible)
@@ -1046,6 +1061,8 @@ void
 gtk_date_entry_set_time_visible (GtkDateEntry *date,
                                  gboolean is_visible)
 {
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	priv->time_is_visible = is_visible;
@@ -1088,6 +1105,8 @@ gtk_date_entry_change_mask (GtkDateEntry *date)
 	gchar *mask, *format[3];
 	gint i;
 
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
 
 	for (i = 0; i < 3; i++)
@@ -1117,6 +1136,8 @@ gtk_date_entry_change_mask (GtkDateEntry *date)
 static void
 hide_popup (GtkWidget *date)
 {
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
 	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE ((GtkDateEntry *)date);
 
 	gtk_widget_hide (priv->wCalendar);
