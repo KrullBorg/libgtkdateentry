@@ -861,11 +861,19 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
                               const gchar *format)
 {
 	gchar *fmt;
-	GDateDay day;
-	GDateMonth month;
-	GDateYear year;
+
+	gint year;
+	gint month;
+	gint day;
+	gint hours;
+	gint minutes;
+	gdouble seconds;
+
 	gint i;
-	gint pos = 0;
+	gint l;
+	gint pos;
+
+	GDateTime *gdatetime;
 
 	g_return_val_if_fail (GTK_IS_DATE_ENTRY (date), FALSE);
 
@@ -880,31 +888,64 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 			fmt = g_strdup (format);
 		}
 
-	for (i = 0; i < 3; i++)
+	year = 1;
+	month = 1;
+	day = 1;
+	hours = 0;
+	minutes = 0;
+	seconds = 0.0;
+
+	pos = 0;
+	l = strlen (fmt);
+	for (i = 0; i < l; i++)
 		{
 			switch (fmt[i])
 				{
 					case 'd':
-						if (!g_date_valid_day ((GDateDay)strtol (g_strndup (str + pos, 2), NULL, 10))) return FALSE;
-						day = (GDateDay)strtol (g_strndup (str + pos, 2), NULL, 10);
+						day = strtol (g_strndup (str + pos, 2), NULL, 10);
+						if (day == 0) day = 1;
 						pos += 3;
 						break;
 
 					case 'm':
-						if (!g_date_valid_month ((GDateMonth)strtol (g_strndup (str + pos, 2), NULL, 10))) return FALSE;
-						month = (GDateMonth)strtol (g_strndup (str + pos, 2), NULL, 10);
+						month = strtol (g_strndup (str + pos, 2), NULL, 10);
+						if (month == 0) month = 1;
 						pos += 3;
 						break;
 
 					case 'Y':
-						if (!g_date_valid_year ((GDateYear)strtol (g_strndup (str + pos, 4), NULL, 10))) return FALSE;
-						year = (GDateYear)strtol (g_strndup (str + pos, 4), NULL, 10);
+						year = strtol (g_strndup (str + pos, 4), NULL, 10);
+						if (year == 0) year = 1;
 						pos += 5;
 						break;
+
+					case 'H':
+						hours = strtol (g_strndup (str + pos, 2), NULL, 10);
+						pos += 3;
+						break;
+
+					case 'M':
+						minutes = strtol (g_strndup (str + pos, 2), NULL, 10);
+						pos += 3;
+						break;
+
+					case 'S':
+						seconds = g_strtod (g_strndup (str + pos, 2), NULL);
+						pos += 3;
+						break;
+				}
+
+			if (pos >= strlen (str))
+				{
+					i = l;
+					continue;
 				}
 		}
 
-	gtk_date_entry_set_date_gdate (date, g_date_new_dmy (day, month, year));
+	gdatetime = g_date_time_new_local (year, month, day, hours, minutes, seconds);
+	gtk_date_entry_set_date_gdatetime (date, gdatetime);
+	g_date_time_unref (gdatetime);
+
 	return TRUE;
 }
 
@@ -1169,6 +1210,22 @@ gtk_date_entry_set_time_visible (GtkDateEntry *date,
 			gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnMinutes), 0.0);
 			gtk_spin_button_set_value (GTK_SPIN_BUTTON (priv->spnSeconds), 0.0);
 		}
+}
+
+/**
+ * gtk_date_entry_is_time_visible:
+ * @date: a #GtkDateEntry.
+ * 
+ * Returns: #TRUE or #FALSE if time part is visible or not.
+ */
+gboolean
+gtk_date_entry_is_time_visible (GtkDateEntry *date)
+{
+	g_return_if_fail (GTK_IS_DATE_ENTRY (date));
+
+	GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
+
+	return priv->time_is_visible;
 }
 
 /* PRIVATE */

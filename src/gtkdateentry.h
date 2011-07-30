@@ -100,6 +100,7 @@ void gtk_date_entry_set_calendar_button_visible (GtkDateEntry *date,
 
 void gtk_date_entry_set_time_visible (GtkDateEntry *date,
                                       gboolean is_visible);
+gboolean gtk_date_entry_is_time_visible (GtkDateEntry *date);
 
 
 G_END_DECLS

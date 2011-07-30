@@ -36,7 +36,6 @@ GtkWidget *format;
 GtkWidget *btnFormat;
 GtkWidget *txtSetStrf;
 GtkWidget *txtSetStrfFormat;
-GtkWidget *txtSetStrfSep;
 GtkWidget *btnSetStrf;
 GtkWidget *txtGetStrfFormat;
 GtkWidget *txtGetStrf;
@@ -84,7 +83,7 @@ on_btnSetStrf_clicked (GtkButton *button,
 {
 	gtk_date_entry_set_date_strf (GTK_DATE_ENTRY (date),
 	                              (const gchar *)gtk_entry_get_text (GTK_ENTRY (txtSetStrf)),
-	                              NULL);
+	                              (const gchar *)gtk_entry_get_text (GTK_ENTRY (txtSetStrfFormat)));
 }
 
 static void
@@ -265,6 +264,11 @@ main (int argc, char **argv)
 	txtSetStrf = gtk_entry_new ();
 	gtk_table_attach (GTK_TABLE (table), txtSetStrf, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 	gtk_widget_show (txtSetStrf);
+
+	x++;
+	txtSetStrfFormat = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (table), txtSetStrfFormat, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+	gtk_widget_show (txtSetStrfFormat);
 
 	x++;
 	btnSetStrf = gtk_button_new_with_label ("set_date_strf");
