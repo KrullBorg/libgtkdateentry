@@ -732,7 +732,9 @@ struct tm
 GDate
 *gtk_date_entry_get_gdate (GtkDateEntry *date)
 {
-	gint i, pos = 0, val;
+	gint i;
+	gint pos = 0;
+	gint val;
 	gchar *txt;
 	GDate *gdate;
 	GDateDay gday;
@@ -900,9 +902,9 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 			fmt = g_strdup (format);
 		}
 
-	year = 1;
-	month = 1;
-	day = 1;
+	year = 0;
+	month = 0;
+	day = 0;
 	hours = 0;
 	minutes = 0;
 	seconds = 0.0;
@@ -915,19 +917,16 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 				{
 					case 'd':
 						day = strtol (g_strndup (str + pos, 2), NULL, 10);
-						if (day == 0) day = 1;
 						pos += 3;
 						break;
 
 					case 'm':
 						month = strtol (g_strndup (str + pos, 2), NULL, 10);
-						if (month == 0) month = 1;
 						pos += 3;
 						break;
 
 					case 'Y':
 						year = strtol (g_strndup (str + pos, 4), NULL, 10);
-						if (year == 0) year = 1;
 						pos += 5;
 						break;
 
@@ -954,9 +953,25 @@ gtk_date_entry_set_date_strf (GtkDateEntry *date,
 				}
 		}
 
-	gdatetime = g_date_time_new_local (year, month, day, hours, minutes, seconds);
+	if (year == 0
+	    || month == 0
+	    || day == 0)
+		{
+			/* TODO
+			 * when only time part is visible, it must set only the time part
+			 */
+			gdatetime = NULL;
+		}
+	else
+		{
+			gdatetime = g_date_time_new_local (year, month, day, hours, minutes, seconds);
+		}
 	gtk_date_entry_set_date_gdatetime (date, gdatetime);
-	g_date_time_unref (gdatetime);
+
+	if (gdatetime != NULL)
+		{
+			g_date_time_unref (gdatetime);
+		}
 
 	return TRUE;
 }
