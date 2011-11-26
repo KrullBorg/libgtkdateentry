@@ -3,9 +3,8 @@ GObject
     GtkObject
       GtkWidget
         GtkContainer
-          GtkBox
-            GtkHBox
-              GtkDateEntry
+          GtkBin
+            GtkDateEntry
   GtkStyle
   GdkDrawable
     GdkWindow
@@ -16,4 +15,4 @@ GInterface
   GTypePlugin
   AtkImplementorIface
   GtkBuildable
-  GtkOrientable
+  GdaExQueryEditorIWidget

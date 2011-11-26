@@ -1,10 +1,80 @@
 <ARG>
-<NAME>GtkDateEntry::editable-with-calendar</NAME>
+<NAME>GtkDateEntry::calendar-button-visible</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>TRUE to show the calendar's button</NICK>
+<BLURB>Determines if the calendar's button is visible or not.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GtkDateEntry::date-visible</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>TRUE to show the date part</NICK>
+<BLURB>Determines if the date part of the widget is visible or not.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GtkDateEntry::editable-from-calendar</NAME>
 <TYPE>gboolean</TYPE>
 <RANGE></RANGE>
 <FLAGS>rw</FLAGS>
 <NICK>TRUE if it is editable only from calendar</NICK>
 <BLURB>Determines if the user can edit the text in the #GtkDateEntry widget only from the calendar or not.</BLURB>
 <DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GtkDateEntry::format</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>The date's format</NICK>
+<BLURB>The date's format.</BLURB>
+<DEFAULT>""</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GtkDateEntry::separator</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>The separator</NICK>
+<BLURB>The separator between day, month and year.</BLURB>
+<DEFAULT>""</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GtkDateEntry::time-separator</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>The time separator</NICK>
+<BLURB>The separator between hours, minutes and seconds.</BLURB>
+<DEFAULT>""</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GtkDateEntry::time-visible</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>TRUE to show the time part</NICK>
+<BLURB>Determines if the time part of the widget is visible or not.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GtkDateEntry::time-with-seconds</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>TRUE to show the seconds in time part</NICK>
+<BLURB>Determines if the seconds in the time part of the widget are visible or not.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
 </ARG>
 

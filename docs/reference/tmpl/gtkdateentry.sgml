@@ -27,7 +27,42 @@ using the functions below.
 </para>
 
 
-<!-- ##### ARG GtkDateEntry:editable-with-calendar ##### -->
+<!-- ##### ARG GtkDateEntry:calendar-button-visible ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GtkDateEntry:date-visible ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GtkDateEntry:editable-from-calendar ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GtkDateEntry:format ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GtkDateEntry:separator ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GtkDateEntry:time-separator ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GtkDateEntry:time-visible ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GtkDateEntry:time-with-seconds ##### -->
 <para>
 
 </para>
@@ -50,6 +85,7 @@ using the functions below.
 
 @date: 
 @separator: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gtk_date_entry_set_format ##### -->
@@ -79,6 +115,7 @@ using the functions below.
 @date: 
 @format: 
 @separator: 
+@time_separator: 
 @Returns: 
 
 

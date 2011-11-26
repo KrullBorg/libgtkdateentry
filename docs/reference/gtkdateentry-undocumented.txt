@@ -1,12 +1,17 @@
-68% symbol docs coverage.
-15 symbols documented.
-0 symbols incomplete.
-7 not documented.
+70% symbol docs coverage.
+26 symbols documented.
+1 symbols incomplete.
+11 not documented.
 
 
 gtk_date_entry_get_gdate
+gtk_date_entry_get_gdatetime
+gtk_date_entry_get_sql
 gtk_date_entry_get_strf
 gtk_date_entry_get_tm
+gtk_date_entry_is_date_visible
+gtk_date_entry_is_time_visible
+gtk_date_entry_set_separator (Returns)
 gtk_form_widget_date_entry_get_value_stringify
 gtk_form_widget_date_entry_new
 gtk_form_widget_date_entry_set_value_stringify

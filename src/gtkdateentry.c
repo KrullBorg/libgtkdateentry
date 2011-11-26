@@ -36,6 +36,7 @@
 #endif
 
 #include <gtkmaskedentry.h>
+#include <libgdaex/queryeditor_widget_interface.h>
 
 #include "gtkdateentry.h"
 
@@ -54,6 +55,8 @@ enum
 
 static void gtk_date_entry_class_init (GtkDateEntryClass *klass);
 static void gtk_date_entry_init (GtkDateEntry *date);
+
+static void gtk_date_entry_gdaex_query_editor_iwidget_interface_init (GdaExQueryEditorIWidgetIface *iface);
 
 static void gtk_date_entry_size_request (GtkWidget *widget,
                                     GtkRequisition *requisition);
@@ -92,6 +95,10 @@ static void gtk_date_entry_get_property (GObject *object,
 static gchar *gtk_date_entry_get_separator_from_locale ();
 static gchar *gtk_date_entry_get_format_from_locale ();
 
+static const gchar *gtk_date_entry_get_value (GdaExQueryEditorIWidget *iwidget);
+static const gchar *gtk_date_entry_get_value_sql (GdaExQueryEditorIWidget *iwidget);
+static void gtk_date_entry_set_value (GdaExQueryEditorIWidget *iwidget, const gchar *value);
+
 static GtkWidgetClass *parent_class = NULL;
 
 
@@ -122,7 +129,9 @@ struct _GtkDateEntryPrivate
 		gboolean time_with_seconds;
 	};
 
-G_DEFINE_TYPE (GtkDateEntry, gtk_date_entry, GTK_TYPE_BIN)
+G_DEFINE_TYPE_WITH_CODE (GtkDateEntry, gtk_date_entry, GTK_TYPE_BIN,
+                         G_IMPLEMENT_INTERFACE (GDAEX_QUERY_EDITOR_TYPE_IWIDGET,
+                                                gtk_date_entry_gdaex_query_editor_iwidget_interface_init));
 
 static void
 gtk_date_entry_class_init (GtkDateEntryClass *klass)
@@ -295,6 +304,14 @@ gtk_date_entry_init (GtkDateEntry *date)
 	gtk_widget_show (priv->spnMinutes);
 	gtk_widget_show (priv->lblSeconds);
 	gtk_widget_show (priv->spnSeconds);
+}
+
+static void
+gtk_date_entry_gdaex_query_editor_iwidget_interface_init (GdaExQueryEditorIWidgetIface *iface)
+{
+	iface->get_value = gtk_date_entry_get_value;
+	iface->get_value_sql = gtk_date_entry_get_value_sql;
+	iface->set_value = gtk_date_entry_set_value;
 }
 
 /**
@@ -1761,4 +1778,23 @@ static gchar
 		}
 
 	return fmt;
+}
+
+static const gchar
+*gtk_date_entry_get_value (GdaExQueryEditorIWidget *iwidget)
+{
+	return  gtk_date_entry_get_strf (GTK_DATE_ENTRY (iwidget), gtk_date_entry_is_time_visible (GTK_DATE_ENTRY (iwidget)) ? "dmYHMS" : "dmY", NULL, NULL);
+}
+
+static const gchar
+*gtk_date_entry_get_value_sql (GdaExQueryEditorIWidget *iwidget)
+{
+	return gtk_date_entry_get_sql (GTK_DATE_ENTRY (iwidget));
+}
+
+static void
+gtk_date_entry_set_value (GdaExQueryEditorIWidget *iwidget,
+                            const gchar *value)
+{
+	gtk_date_entry_set_date_strf (GTK_DATE_ENTRY (iwidget), value == NULL ?  g_date_time_format (g_date_time_new_now_local (), "%Y-%m-%d %H.%M.%S") : value, "YmdHMS");
 }
