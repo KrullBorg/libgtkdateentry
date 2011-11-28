@@ -8,9 +8,17 @@ catalogs_DATA = gtkdateentry.xml
 
 EXTRA_DIST = $(catalogs_DATA)
 
+if PLATFORM_WIN32
+libmodulesext = -0.dll
+libmodulesdir = $(bindir)
+else
+libmodulesext = .so
+libmodulesdir = $(libdir)
+endif
+
 install-exec-hook:
-	cd $(moduledir) && \
-	ln -s -f $(libdir)/libgtkdateentry.so .
+	cd $(glademodulesdir) && \
+	ln -s -f $(libmodulesdir)/libgtkdateentry$(libmodulesext) .
 
 uninstall-hook:
-	rm -f $(moduledir)/libgtkdateentry.so
+	rm -f $(glademodulesdir)/libgtkdateentry$(libmodulesext)
