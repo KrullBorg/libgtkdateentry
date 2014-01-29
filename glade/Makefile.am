@@ -1,8 +1,8 @@
 SUBDIRS = icons
 
-glademodulesdir = `pkg-config --variable=moduledir gladeui-1.0`
+glademodulesdir = `pkg-config --variable=moduledir gladeui-2.0`
 
-gladecatalogsdir = `pkg-config --variable=catalogdir gladeui-1.0`
+gladecatalogsdir = `pkg-config --variable=catalogdir gladeui-2.0`
 
 gladecatalogs_DATA = gtkdateentry.xml
 
