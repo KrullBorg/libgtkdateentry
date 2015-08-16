@@ -48,3 +48,5 @@ intltool-*
 Rules-quot
 tests/plugin_gtkform
 *.exe
+compile
+gtk-doc.m4
