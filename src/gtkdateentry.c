@@ -1,7 +1,7 @@
 /*
  * GtkDateEntry widget for GTK+
  *
- * Copyright (C) 2005-2011 Andrea Zagli <azagli@libero.it>
+ * Copyright (C) 2005-2014 Andrea Zagli <azagli@libero.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,8 +58,12 @@ static void gtk_date_entry_init (GtkDateEntry *date);
 
 static void gtk_date_entry_gdaex_query_editor_iwidget_interface_init (GdaExQueryEditorIWidgetIface *iface);
 
-static void gtk_date_entry_size_request (GtkWidget *widget,
-                                    GtkRequisition *requisition);
+static void gtk_date_entry_get_preferred_height (GtkWidget *widget,
+                                                 gint *minimum_height,
+                                                 gint *natural_height);
+static void gtk_date_entry_get_preferred_width (GtkWidget *widget,
+                                                gint *minimum_width,
+                                                gint *natural_width);
 static void gtk_date_entry_size_allocate (GtkWidget *widget,
                                      GtkAllocation *allocation);
 
@@ -148,7 +152,8 @@ gtk_date_entry_class_init (GtkDateEntryClass *klass)
 	object_class->set_property = gtk_date_entry_set_property;
 	object_class->get_property = gtk_date_entry_get_property;
 
-	widget_class->size_request = gtk_date_entry_size_request;
+	widget_class->get_preferred_height = gtk_date_entry_get_preferred_height;
+	widget_class->get_preferred_width = gtk_date_entry_get_preferred_width;
 	widget_class->size_allocate = gtk_date_entry_size_allocate;
 
 	g_object_class_install_property (object_class, PROP_SEPARATOR,
@@ -220,7 +225,7 @@ gtk_date_entry_init (GtkDateEntry *date)
 	priv->time_separator = ":";
 	priv->format = gtk_date_entry_get_format_from_locale ();
 
-	priv->hbox = gtk_hbox_new (FALSE, 0);
+	priv->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_add (GTK_CONTAINER (date), priv->hbox);
 	gtk_widget_show (priv->hbox);
 
@@ -1405,11 +1410,11 @@ key_press_popup (GtkWidget *widget,
 {
 	switch (event->keyval)
 		{
-			case GDK_Escape:
+			case GDK_KEY_Escape:
 				break;
 
-			case GDK_Return:
-	    case GDK_KP_Enter:
+			case GDK_KEY_Return:
+			case GDK_KEY_KP_Enter:
 				/* TO DO */
 				break;
 
@@ -1442,7 +1447,7 @@ button_press_popup (GtkWidget *widget,
 	if (child != widget) {
 		while (child) {
 			if (child == widget) return FALSE;
-			child = child->parent;
+			child = gtk_widget_get_parent (child);
 		}
 	}
 
@@ -1457,9 +1462,11 @@ btnCalendar_on_toggled (GtkToggleButton *togglebutton,
 {
 	if (gtk_toggle_button_get_active (togglebutton))
 		{
+			GdkWindow *window;
+			GtkAllocation allocation;
 			GtkDateEntry *date = (GtkDateEntry *)user_data;
 			GtkDateEntryPrivate *priv = GTK_DATE_ENTRY_GET_PRIVATE (date);
-		
+
 			gint x, y, bwidth, bheight;
 			GtkRequisition req;
 			GtkWidget *btn = priv->btnCalendar,
@@ -1477,12 +1484,14 @@ btnCalendar_on_toggled (GtkToggleButton *togglebutton,
 				}
 
 			/* show calendar */
-			gtk_widget_size_request (wCalendar, &req);
-			gdk_window_get_origin (GDK_WINDOW (btn->window), &x, &y);
-			x += btn->allocation.x;
-			y += btn->allocation.y;
-			bwidth = btn->allocation.width;
-			bheight = btn->allocation.height;
+			window = gtk_widget_get_window (btn);
+			gtk_widget_get_preferred_size (wCalendar, &req, NULL);
+			gdk_window_get_origin (window, &x, &y);
+			gtk_widget_get_allocation (btn, &allocation);
+			x += allocation.x;
+			y += allocation.y;
+			bwidth = allocation.width;
+			bheight = allocation.height;
 			x += bwidth - req.width;
 			y += bheight;
 			if (x < 0) x = 0;
@@ -1494,7 +1503,8 @@ btnCalendar_on_toggled (GtkToggleButton *togglebutton,
 			gtk_window_move (GTK_WINDOW (wCalendar), x, y);
 			gtk_widget_show (wCalendar);
 			gtk_widget_grab_focus (priv->calendar);
-			popup_grab_on_window (wCalendar->window, gtk_get_current_event_time ());
+			window = gtk_widget_get_window (wCalendar);
+			popup_grab_on_window (window, gtk_get_current_event_time ());
 		}
 }
 
@@ -1612,34 +1622,71 @@ gtk_date_entry_get_property (GObject *object, guint property_id, GValue *value, 
 }
 
 static void
-gtk_date_entry_size_request (GtkWidget *widget,
-                        GtkRequisition *requisition)
+gtk_date_entry_get_preferred_height (GtkWidget *widget,
+                                     gint *minimum_height,
+                                     gint *natural_height)
 {
 	GtkDateEntry *date_entry;
 	GtkBin *bin;
 	GtkRequisition child_requisition;
+	GtkRequisition child_requisition_natural;
 
 	guint border_width;
 
 	g_return_if_fail (GTK_IS_DATE_ENTRY (widget));
-	g_return_if_fail (requisition != NULL);
+	g_return_if_fail (minimum_height != NULL);
+	g_return_if_fail (natural_height != NULL);
 
 	date_entry = GTK_DATE_ENTRY (widget);
 	bin = GTK_BIN (date_entry);
 
-	requisition->width = 0;
-	requisition->height = 0;
+	minimum_height = 0;
+	natural_height = 0;
 
-	if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
+	if (gtk_bin_get_child (bin) && gtk_widget_get_visible (gtk_bin_get_child (bin)))
 		{
-			gtk_widget_size_request (bin->child, &child_requisition);
-			requisition->width += child_requisition.width;
-			requisition->height += child_requisition.height;
+			gtk_widget_get_preferred_size (gtk_bin_get_child (bin), &child_requisition, &child_requisition_natural);
+			minimum_height += child_requisition.height;
+			natural_height += child_requisition_natural.height;
 		}
 
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
-	requisition->width += (border_width * 2);
-	requisition->height += (border_width * 2);
+	minimum_height += (border_width * 2);
+	natural_height += (border_width * 2);
+}
+
+static void
+gtk_date_entry_get_preferred_width (GtkWidget *widget,
+                                    gint *minimum_width,
+                                    gint *natural_width)
+{
+	GtkDateEntry *date_entry;
+	GtkBin *bin;
+	GtkRequisition child_requisition;
+	GtkRequisition child_requisition_natural;
+
+	guint border_width;
+
+	g_return_if_fail (GTK_IS_DATE_ENTRY (widget));
+	g_return_if_fail (minimum_width != NULL);
+	g_return_if_fail (natural_width != NULL);
+
+	date_entry = GTK_DATE_ENTRY (widget);
+	bin = GTK_BIN (date_entry);
+
+	minimum_width = 0;
+	natural_width = 0;
+
+	if (gtk_bin_get_child (bin) && gtk_widget_get_visible (gtk_bin_get_child (bin)))
+		{
+			gtk_widget_get_preferred_size (gtk_bin_get_child (bin), &child_requisition, &child_requisition_natural);
+			minimum_width += child_requisition.width;
+			natural_width += child_requisition_natural.width;
+		}
+
+	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
+	minimum_width += (border_width * 2);
+	natural_width += (border_width * 2);
 }
 
 static void
@@ -1648,6 +1695,7 @@ gtk_date_entry_size_allocate (GtkWidget *widget,
 {
 	GtkDateEntry *date_entry;
 	GtkBin *bin;
+	GtkAllocation w_allocation;
 	GtkAllocation relative_allocation;
 	GtkAllocation child_allocation;
 
@@ -1664,16 +1712,17 @@ gtk_date_entry_size_allocate (GtkWidget *widget,
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 	relative_allocation.x = border_width;
 	relative_allocation.y = border_width;
-	relative_allocation.width = MAX (1, (gint)widget->allocation.width - relative_allocation.x * 2);
-	relative_allocation.height = MAX (1, (gint)widget->allocation.height - relative_allocation.y * 2);
+	gtk_widget_get_allocation (widget, &w_allocation);
+	relative_allocation.width = MAX (1, (gint)w_allocation.width - relative_allocation.x * 2);
+	relative_allocation.height = MAX (1, (gint)w_allocation.height - relative_allocation.y * 2);
 
-	if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
+	if (gtk_bin_get_child (bin) && gtk_widget_get_visible (gtk_bin_get_child (bin)))
 		{
 			child_allocation.x = relative_allocation.x + allocation->x;
 			child_allocation.y = relative_allocation.y + allocation->y;
 			child_allocation.width = relative_allocation.width;
 			child_allocation.height = relative_allocation.height;
-			gtk_widget_size_allocate (bin->child, &child_allocation);
+			gtk_widget_size_allocate (gtk_bin_get_child (bin), &child_allocation);
 		}
 }
 
